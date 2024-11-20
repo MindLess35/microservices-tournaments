@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create-team-members-table" author="Nikita Lyashkevich">
+        <createTable tableName="team_members">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="team_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_team_members_team_id"
+                             referencedTableName="teams"
+                             referencedColumnNames="id"/>
+            </column>
+
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="role" type="VARCHAR(128)"/>
+
+            <column name="joined_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="team_members" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

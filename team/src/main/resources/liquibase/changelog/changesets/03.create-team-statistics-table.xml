@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create-team-statistics-table" author="Nikita Lyashkevich">
+        <createTable tableName="team_statistics">
+            <column name="team_id" type="BIGINT">
+                <constraints primaryKey="true"
+                             foreignKeyName="fk_team_statistics_team_id"
+                             referencedTableName="teams"
+                             referencedColumnNames="id"/>
+            </column>
+
+            <column name="matches_played" type="INTEGER"/>
+
+            <column name="wins" type="INTEGER"/>
+
+            <column name="losses" type="INTEGER"/>
+
+            <column name="draws" type="INTEGER"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="team_statistics" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,139 @@
+name: microservices
+
+services:
+
+  config-server:
+    image: config-server:1.0
+    build:
+      context: ./config-server
+    container_name: config-server
+    networks:
+      - microservices-network
+    environment:
+      - SERVER_PORT=8000
+    ports:
+      - "8000:8000"
+
+  discovery-server:
+    image: discovery-server:1.0
+    build:
+      context: ./discovery-server
+    container_name: discovery-server
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+    environment:
+      - SERVER_PORT=8761
+    ports:
+      - "8761:8761"
+
+  gateway:
+    image: gateway:1.0
+    build:
+      context: ./gateway
+    container_name: gateway
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - discovery-server
+    environment:
+      - SERVER_PORT=8010
+    ports:
+      - "8010:8010"
+
+  user-service:
+#    image: user-service:1.0
+    build:
+      context: ./user
+    container_name: user-service
+    networks:
+      - microservices-network
+      - user-service-network
+    depends_on:
+#      - config-server
+#      - discovery-server
+      - postgres-for-user-service
+    environment:
+      - SERVER_PORT=8020
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-user-service:5432/user
+      - SPRING_DATASOURCE_USERNAME=nikita
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=users
+    ports:
+      - "8020:8020"
+
+
+  postgres-for-user-service:
+    image: postgres:15.6
+    container_name: postgres-for-user-service
+    networks:
+      - user-service-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=user
+    volumes:
+      - ./user/src/main/resources/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres-for-user-service:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+  team-service:
+#    image: team-service:1.0
+    build:
+      context: ./team
+    container_name: team-service
+    networks:
+      - microservices-network
+      - team-service-network
+    depends_on:
+#      - config-server
+#      - discovery-server
+      - postgres-for-team-service
+    environment:
+      - SERVER_PORT=8030
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-team-service:5433/team
+      - SPRING_DATASOURCE_USERNAME=nikita
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=teams
+    ports:
+      - "8030:8030"
+
+
+  postgres-for-team-service:
+    image: postgres:15.6
+    container_name: postgres-for-team-service
+    networks:
+      - team-service-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=team
+    volumes:
+      - ./team/src/main/resources/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres-for-team-service:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+
+
+networks:
+  microservices-network:
+    driver: bridge
+
+  user-service-network:
+    driver: bridge
+
+  team-service-network:
+    driver: bridge
+
+
+volumes:
+  postgres-for-user-service:
+    driver: local
+
+  postgres-for-team-service:
+    driver: local

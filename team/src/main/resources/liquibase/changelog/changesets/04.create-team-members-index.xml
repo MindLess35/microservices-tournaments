@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create-team-members-index" author="Nikita Lyashkevich">
+        <createIndex indexName="idx_team_members_team_id_user_id" tableName="team_members">
+            <column name="team_id"/>
+            <column name="user_id"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_team_members_team_id_user_id" tableName="team_members"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
