@@ -24,14 +24,15 @@ CREATE TABLE teams (
 
 
 CREATE TABLE team_members (
-    id              BIGSERIAL       PRIMARY KEY,
+--     id              BIGSERIAL,
     team_id         BIGINT          NOT NULL REFERENCES teams(id),
     user_id         BIGINT          NOT NULL,
     role            VARCHAR(128),
-    joined_at       TIMESTAMP       NOT NULL
+    joined_at       TIMESTAMP       NOT NULL,
+    PRIMARY KEY (team_id, user_id)
 );
 
-CREATE INDEX idx_team_members_team_id_user_id ON team_members (team_id, user_id);
+-- CREATE UNIQUE INDEX idx_team_members_team_id_user_id ON team_members (team_id, user_id);
 
 
 CREATE TABLE team_statistics (

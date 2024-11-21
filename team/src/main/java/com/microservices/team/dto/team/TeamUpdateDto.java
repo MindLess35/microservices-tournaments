@@ -1,4 +1,4 @@
-package com.microservices.team.dto;
+package com.microservices.team.dto.team;
 
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;

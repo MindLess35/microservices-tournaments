@@ -1,12 +1,9 @@
 package com.microservices.team.entity;
 
+import com.microservices.team.entity.embedded.TeamIdAndUserId;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,19 +25,21 @@ import java.time.Instant;
 @Table(name = "team_members")
 public class TeamMember {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Team team;
-
-//  @ManyToOne(fetch = FetchType.LAZY)
-    private Long userId;
+    @EmbeddedId
+    private TeamIdAndUserId id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    private Team team;
+//
+////  @ManyToOne(fetch = FetchType.LAZY)
+//    private Long userId;
 
     private String role;
 
-    @CreationTimestamp
+    @Builder.Default
     @Column(updatable = false, nullable = false)
-    private Instant joinedAt;
+    private Instant joinedAt = Instant.now();
 }

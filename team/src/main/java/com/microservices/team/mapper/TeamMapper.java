@@ -1,8 +1,8 @@
 package com.microservices.team.mapper;
 
-import com.microservices.team.dto.TeamCreateDto;
-import com.microservices.team.dto.TeamReadDto;
-import com.microservices.team.dto.TeamUpdateDto;
+import com.microservices.team.dto.team.TeamCreateDto;
+import com.microservices.team.dto.team.TeamReadDto;
+import com.microservices.team.dto.team.TeamUpdateDto;
 import com.microservices.team.entity.Team;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -14,8 +14,8 @@ public interface TeamMapper {
 
     Team toEntity(TeamCreateDto dto);
 
-    Team updateEntity(TeamUpdateDto teamUpdateDto, @MappingTarget Team user);
+    Team updateEntity(TeamUpdateDto teamUpdateDto, @MappingTarget Team team);
 
-    TeamReadDto toDto(Team user);
+    TeamReadDto toDto(Team team);
 
 }

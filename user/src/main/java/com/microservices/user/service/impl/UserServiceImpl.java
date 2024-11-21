@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private static final String USER_NOT_FOUND = "User with id [%d] not found";
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "java:S3655"})
     @Override
     @Transactional
     public UserReadDto createUser(UserCreateDto userCreateDto) {
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public UserReadDto updateUser(Long id, UserUpdateDto dto) {
         return userRepository.findById(id)
                 .map(u -> userMapper.updateEntity(dto, u))
-                .map(userRepository::save)
+                .map(userRepository::saveAndFlush)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(id)));
     }

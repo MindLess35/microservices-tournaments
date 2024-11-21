@@ -7,10 +7,6 @@
 
     <changeSet id="create-team-members-table" author="Nikita Lyashkevich">
         <createTable tableName="team_members">
-            <column name="id" type="BIGSERIAL">
-                <constraints primaryKey="true"/>
-            </column>
-
             <column name="team_id" type="BIGINT">
                 <constraints nullable="false"
                              foreignKeyName="fk_team_members_team_id"
@@ -28,6 +24,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addPrimaryKey tableName="team_members" columnNames="team_id, user_id"/>
 
         <rollback>
             <dropTable tableName="team_members" cascadeConstraints="true"/>

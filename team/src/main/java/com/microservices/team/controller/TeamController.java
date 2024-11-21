@@ -1,9 +1,9 @@
 package com.microservices.team.controller;
 
-import com.microservices.team.dto.TeamCreateDto;
-import com.microservices.team.dto.TeamReadDto;
-import com.microservices.team.dto.TeamUpdateDto;
-import com.microservices.team.service.TeamService;
+import com.microservices.team.dto.team.TeamCreateDto;
+import com.microservices.team.dto.team.TeamReadDto;
+import com.microservices.team.dto.team.TeamUpdateDto;
+import com.microservices.team.service.interfaces.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class TeamController {
     private final TeamService teamService;
 
-    @PostMapping("/sign-up")
+    @PostMapping
     public ResponseEntity<TeamReadDto> createTeam(@RequestBody @Validated TeamCreateDto teamCreateDto) {
         return ResponseEntity.status(CREATED).body(teamService.createTeam(teamCreateDto));
     }

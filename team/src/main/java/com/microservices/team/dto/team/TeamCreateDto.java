@@ -1,4 +1,4 @@
-package com.microservices.team.dto;
+package com.microservices.team.dto.team;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

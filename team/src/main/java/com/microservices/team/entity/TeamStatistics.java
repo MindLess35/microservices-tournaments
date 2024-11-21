@@ -32,11 +32,15 @@ public class TeamStatistics {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Team team;
 
-    private Integer matchesPlayed;
+    @Builder.Default
+    private Integer matchesPlayed = 0;
 
-    private Integer wins;
+    @Builder.Default
+    private Integer wins = 0;
 
-    private Integer losses;
+    @Builder.Default
+    private Integer losses = 0;
 
-    private Integer draws;
+    @Builder.Default
+    private Integer draws = 0;
 }
