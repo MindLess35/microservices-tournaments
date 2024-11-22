@@ -73,18 +73,15 @@ CREATE TABLE matches (
     start_date            TIMESTAMP       NOT NULL,
     end_date              TIMESTAMP       NOT NULL,
     location              VARCHAR(255),
-    result                VARCHAR(64),
+    result                VARCHAR(16),
     score_first_team      INTEGER,
     score_second_team     INTEGER,
-    status                VARCHAR(64)     NOT NULL,
+    status                VARCHAR(16)     NOT NULL,
     tournament_id         BIGINT          NOT NULL,
     first_team_id         BIGINT          NOT NULL,
-    second_team_id        BIGINT          NOT NULL
+    second_team_id        BIGINT          NOT NULL,
+    UNIQUE (tournament_id, first_team_id, second_team_id)
 );
-
-CREATE INDEX idx_matches_tournament_id ON matches(tournament_id);
-CREATE INDEX idx_matches_team1_id ON matches(first_team_id);
-CREATE INDEX idx_matches_team2_id ON matches(second_team_id);
 
 
 -- email notification service

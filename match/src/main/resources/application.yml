@@ -1,19 +1,20 @@
 http:
   team-service-url: http://team/api/v1/teams/
+  tournament-service-url: http://tournament/api/v1/tournaments/
 
 
 server:
-  port: 8040
+  port: 8050
 
 spring:
   application:
-    name: tournament
+    name: match
 
   config:
     import: optional:configserver:http://localhost:8000
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/tournament
+    url: jdbc:postgresql://localhost:5435/match
     username: nikita
     password: 1234
 
@@ -24,7 +25,7 @@ spring:
         show_sql: true
         format_sql: true
         hbm2ddl.auto: validate
-        default_schema: tournaments
+        default_schema: matches
 
   liquibase:
     enabled: true

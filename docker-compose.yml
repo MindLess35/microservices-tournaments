@@ -157,6 +157,44 @@ services:
       - "5434:5432"
 
 
+  match-service:
+#    image: match-service:1.0
+    build:
+      context: ./match
+    container_name: match-service
+    networks:
+      - microservices-network
+      - match-service-network
+    depends_on:
+#      - config-server
+#      - discovery-server
+      - postgres-for-match-service
+    environment:
+      - SERVER_PORT=8050
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-match-service:5435/match
+      - SPRING_DATASOURCE_USERNAME=nikita
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=matches
+    ports:
+      - "8050:8050"
+
+
+  postgres-for-match-service:
+    image: postgres:15.6
+    container_name: postgres-for-match-service
+    networks:
+      - match-service-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=match
+    volumes:
+      - ./match/src/main/resources/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres-for-match-service:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+
+
 
 networks:
   microservices-network:
@@ -171,6 +209,9 @@ networks:
   tournament-service-network:
     driver: bridge
 
+  match-service-network:
+    driver: bridge
+
 
 volumes:
   postgres-for-user-service:
@@ -180,4 +221,7 @@ volumes:
     driver: local
 
   postgres-for-tournament-service:
+    driver: local
+
+  postgres-for-match-service:
     driver: local
