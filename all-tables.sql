@@ -17,6 +17,7 @@ CREATE TABLE teams (
     id              BIGSERIAL       PRIMARY KEY,
     name            VARCHAR(64)     NOT NULL,
     about           VARCHAR(512),
+    sport_type      VARCHAR(32)     NOT NULL,
     captain_id      BIGINT,
     created_at      TIMESTAMP       NOT NULL,
     updated_at      TIMESTAMP
@@ -24,57 +25,51 @@ CREATE TABLE teams (
 
 
 CREATE TABLE team_members (
---     id              BIGSERIAL,
-    team_id         BIGINT          NOT NULL REFERENCES teams(id),
+    team_id         BIGINT          NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
     user_id         BIGINT          NOT NULL,
     role            VARCHAR(128),
     joined_at       TIMESTAMP       NOT NULL,
     PRIMARY KEY (team_id, user_id)
 );
 
--- CREATE UNIQUE INDEX idx_team_members_team_id_user_id ON team_members (team_id, user_id);
-
 
 CREATE TABLE team_statistics (
-    team_id             BIGINT       PRIMARY KEY REFERENCES teams(id),
+    team_id             BIGINT       PRIMARY KEY REFERENCES teams(id) ON DELETE CASCADE,
     matches_played      INTEGER,
     wins                INTEGER,
     losses              INTEGER,
     draws               INTEGER
 );
 
-CREATE INDEX idx_team_statistics_team_id ON team_statistics(team_id);
-
 
 -- tournament service
 CREATE TABLE tournaments (
     id              BIGSERIAL       PRIMARY KEY,
-    name            VARCHAR(128)    NOT NULL,
-    sport_type      VARCHAR(128)    NOT NULL,
+    name            VARCHAR(255)    NOT NULL,
+    sport_type      VARCHAR(32)     NOT NULL,
     start_date      TIMESTAMP       NOT NULL,
     end_date        TIMESTAMP       NOT NULL,
     location        VARCHAR(255),
     prize_pool      DECIMAL,
-    status          VARCHAR(64)     NOT NULL,
+    status          VARCHAR(16)     NOT NULL,
     created_at      TIMESTAMP       NOT NULL,
     updated_at      TIMESTAMP
 );
 
 
 CREATE TABLE tournament_teams (
-    id                  BIGSERIAL       PRIMARY KEY,
+    tournament_id       BIGINT          REFERENCES tournaments(id) ON DELETE CASCADE,
+    team_id             BIGINT,
     registration_date   TIMESTAMP       NOT NULL,
-    is_approved         BOOLEAN         NOT NULL,
-    tournament_id       BIGINT          REFERENCES tournaments(id),
-    team_id             BIGINT
+    is_approved         BOOLEAN,
+    PRIMARY KEY (tournament_id, team_id)
 );
-
-CREATE UNIQUE INDEX idx_tournament_teams_tournament_id_team_id ON tournament_teams(tournament_id, team_id);
 
 
 -- match service
 CREATE TABLE matches (
     id                    BIGSERIAL       PRIMARY KEY,
+    sport_type            VARCHAR(32)     NOT NULL,
     start_date            TIMESTAMP       NOT NULL,
     end_date              TIMESTAMP       NOT NULL,
     location              VARCHAR(255),

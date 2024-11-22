@@ -119,6 +119,44 @@ services:
       - "5433:5432"
 
 
+  tournament-service:
+#    image: tournament-service:1.0
+    build:
+      context: ./tournament
+    container_name: tournament-service
+    networks:
+      - microservices-network
+      - tournament-service-network
+    depends_on:
+#      - config-server
+#      - discovery-server
+      - postgres-for-tournament-service
+    environment:
+      - SERVER_PORT=8040
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-tournament-service:5434/tournament
+      - SPRING_DATASOURCE_USERNAME=nikita
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=tournaments
+    ports:
+      - "8040:8040"
+
+
+  postgres-for-tournament-service:
+    image: postgres:15.6
+    container_name: postgres-for-tournament-service
+    networks:
+      - tournament-service-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=tournament
+    volumes:
+      - ./tournament/src/main/resources/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres-for-tournament-service:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+
 
 networks:
   microservices-network:
@@ -130,10 +168,16 @@ networks:
   team-service-network:
     driver: bridge
 
+  tournament-service-network:
+    driver: bridge
+
 
 volumes:
   postgres-for-user-service:
     driver: local
 
   postgres-for-team-service:
+    driver: local
+
+  postgres-for-tournament-service:
     driver: local

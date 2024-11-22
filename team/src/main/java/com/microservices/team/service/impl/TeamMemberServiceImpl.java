@@ -12,6 +12,8 @@ import com.microservices.team.repository.TeamMemberRepository;
 import com.microservices.team.service.interfaces.TeamMemberService;
 import com.microservices.team.service.interfaces.TeamService;
 import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     private final TeamMemberRepository teamMemberRepository;
     private final TeamMemberMapper teamMemberMapper;
     private final TeamService teamService;
+    @PersistenceContext
+    private final EntityManager entityManager;
     private static final String TEAM_MEMBER_NOT_FOUND = "Team member with teamId id [%d] and userId [%d] not found";
 
     @Override
@@ -30,15 +34,15 @@ public class TeamMemberServiceImpl implements TeamMemberService {
         Long teamId = createDto.teamId();
         Long userId = createDto.userId();
         teamService.checkExistenceById(teamId);
-        if (teamMemberRepository.existsById(teamMemberMapper.toEmbeddedId(createDto))) {
+        if (teamMemberRepository.existsById(teamMemberMapper.toEmbeddedId(teamId, userId))) {
             throw new BadRequestBaseException("User with id [%d] is already a member of the team with id [%d]"
                     .formatted(userId, teamId));
         }
-        teamService.checkUserExistence(userId);
+        teamService.checkUserExistenceById(userId);
 
         TeamMember teamMember = teamMemberMapper.toEntity(createDto);
-        TeamMember save = teamMemberRepository.save(teamMember);
-        return teamMemberMapper.toDto(save);
+        entityManager.persist(teamMember);
+        return teamMemberMapper.toDto(teamMember);
     }
 
     @Override

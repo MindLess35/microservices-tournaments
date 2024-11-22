@@ -17,6 +17,10 @@
 
             <column name="about" type="VARCHAR(512)"/>
 
+            <column name="sport_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="captain_id" type="BIGINT"/>
 
             <column name="created_at" type="TIMESTAMP">

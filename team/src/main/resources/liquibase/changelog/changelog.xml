@@ -11,8 +11,4 @@
 
     <include file="changesets/03.create-team-statistics-table.xml" relativeToChangelogFile="true"/>
 
-<!--    <include file="changesets/04.create-team-members-index.xml" relativeToChangelogFile="true"/>-->
-
-    <include file="changesets/05.create-team-statistics-index.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>

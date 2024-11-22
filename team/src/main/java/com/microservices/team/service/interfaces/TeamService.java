@@ -18,7 +18,7 @@ public interface TeamService {
 
     void checkExistenceById(Long id);
 
-    void checkUserExistence(Long userId);
+    void checkUserExistenceById(Long userId);
 
     TeamReadDto createTeam(TeamCreateDto teamCreateDto);
 }

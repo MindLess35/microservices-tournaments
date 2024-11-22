@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -27,15 +26,6 @@ public class TeamMember {
 
     @EmbeddedId
     private TeamIdAndUserId id;
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    private Team team;
-//
-////  @ManyToOne(fetch = FetchType.LAZY)
-//    private Long userId;
 
     private String role;
 

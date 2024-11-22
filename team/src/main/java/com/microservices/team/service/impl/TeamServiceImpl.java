@@ -1,14 +1,16 @@
 package com.microservices.team.service.impl;
 
+import com.common.exception.exception.base.BadRequestBaseException;
 import com.common.exception.exception.base.ResourceNotFoundException;
 import com.microservices.team.dto.team.TeamCreateDto;
 import com.microservices.team.dto.team.TeamReadDto;
 import com.microservices.team.dto.team.TeamUpdateDto;
 import com.microservices.team.entity.Team;
 import com.microservices.team.event.TeamCreationEvent;
-import com.microservices.team.event.TeamDeletionEvent;
 import com.microservices.team.mapper.TeamMapper;
+import com.microservices.team.mapper.TeamMemberMapper;
 import com.microservices.team.property.ServiceUrlsProperties;
+import com.microservices.team.repository.TeamMemberRepository;
 import com.microservices.team.repository.TeamRepository;
 import com.microservices.team.service.interfaces.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,6 +28,8 @@ import java.util.Optional;
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
+    private final TeamMemberRepository teamMemberRepository;
+    private final TeamMemberMapper teamMemberMapper;
     private final RestTemplate restTemplate;
     private final ServiceUrlsProperties serviceUrlsProperties;
     private final ApplicationEventPublisher eventPublisher;
@@ -48,17 +53,15 @@ public class TeamServiceImpl implements TeamService {
             throw new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id));
     }
 
-    @SuppressWarnings({"OptionalGetWithoutIsPresent", "java:S3655"})
     @Override
-    @Transactional //todo remove captainId from dto
+    @Transactional
     public TeamReadDto createTeam(TeamCreateDto teamCreateDto) {
-        checkUserExistence(teamCreateDto.captainId());
         Team team = teamMapper.toEntity(teamCreateDto);
         eventPublisher.publishEvent(new TeamCreationEvent(team));
         return teamMapper.toDto(teamRepository.save(team));
     }
 
-    public void checkUserExistence(Long userId) {
+    public void checkUserExistenceById(Long userId) {
         Optional.ofNullable(userId)
                 .ifPresent(id -> restTemplate.getForEntity(serviceUrlsProperties.userServiceUrl() + id, Void.class));
     }
@@ -66,20 +69,34 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public TeamReadDto updateTeam(Long id, TeamUpdateDto dto) {
-        checkUserExistence(dto.captainId());
-        return teamRepository.findById(id)
-                .map(u -> teamMapper.updateEntity(dto, u))
-                .map(teamRepository::save)
-                .map(teamMapper::toDto)
+        Team team = teamRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id)));
+
+        Long captainId = dto.captainId();
+        Long currentCaptainId = team.getCaptainId();
+        if (captainId != null) {
+            if (currentCaptainId == null || !Objects.equals(currentCaptainId, captainId)) {
+                checkUserExistenceById(captainId);
+                if (!teamMemberRepository.existsById(teamMemberMapper.toEmbeddedId(id, captainId))) {
+                    throw new BadRequestBaseException("User with id [%d] is not a member of the team with id [%d]"
+                            .formatted(captainId, id));
+                }
+                team.setCaptainId(captainId);
+            }
+
+        } else if (currentCaptainId != null) {
+            team.setCaptainId(null);
+        }
+
+        Team updateTeam = teamMapper.updateEntity(dto, team);
+        Team savedTeam = teamRepository.saveAndFlush(updateTeam);
+        return teamMapper.toDto(savedTeam);
     }
 
     @Override
     @Transactional
     public void deleteTeam(Long id) {
-        eventPublisher.publishEvent(new TeamDeletionEvent(id));
-        teamRepository.delete(teamRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id))));
+        teamRepository.delete(findTeamById(id));
     }
 
 }

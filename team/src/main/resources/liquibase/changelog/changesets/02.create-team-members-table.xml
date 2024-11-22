@@ -10,8 +10,8 @@
             <column name="team_id" type="BIGINT">
                 <constraints nullable="false"
                              foreignKeyName="fk_team_members_team_id"
-                             referencedTableName="teams"
-                             referencedColumnNames="id"/>
+                             references="teams(id)"
+                             deleteCascade="true"/>
             </column>
 
             <column name="user_id" type="BIGINT">

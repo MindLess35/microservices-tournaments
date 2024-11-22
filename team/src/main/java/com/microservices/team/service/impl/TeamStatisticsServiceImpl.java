@@ -5,7 +5,6 @@ import com.microservices.team.dto.statistics.TeamStatisticsReadDto;
 import com.microservices.team.entity.TeamStatistics;
 import com.microservices.team.enums.MatchResultType;
 import com.microservices.team.event.TeamCreationEvent;
-import com.microservices.team.event.TeamDeletionEvent;
 import com.microservices.team.mapper.TeamStatisticsMapper;
 import com.microservices.team.repository.TeamStatisticsRepository;
 import com.microservices.team.service.interfaces.TeamStatisticsService;
@@ -55,15 +54,6 @@ public class TeamStatisticsServiceImpl implements TeamStatisticsService {
         }
         TeamStatistics savedTeamStatistics = teamStatisticsRepository.save(teamStatistics);
         return teamStatisticsMapper.toDto(savedTeamStatistics);
-    }
-
-    @EventListener
-    @Transactional
-    public void deleteStatistics(TeamDeletionEvent event) {
-        Long teamId = event.teamId();
-        TeamStatistics teamStatistics = teamStatisticsRepository.findById(teamId)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_STATS_NOT_FOUND.formatted(teamId)));
-        teamStatisticsRepository.delete(teamStatistics);
     }
 
 }

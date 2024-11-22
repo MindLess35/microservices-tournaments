@@ -17,7 +17,7 @@ public interface TeamMemberMapper {
     @Mapping(target = "id.userId", source = "userId")
     TeamMember toEntity(TeamMemberCreateDto dto);
 
-    TeamIdAndUserId toEmbeddedId(TeamMemberCreateDto dto);
+    TeamIdAndUserId toEmbeddedId(Long teamId, Long userId);
 
     TeamMember updateEntity(TeamMemberUpdateDto dto, @MappingTarget TeamMember teamMember);
 

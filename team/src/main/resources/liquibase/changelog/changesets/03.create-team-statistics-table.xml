@@ -10,8 +10,8 @@
             <column name="team_id" type="BIGINT">
                 <constraints primaryKey="true"
                              foreignKeyName="fk_team_statistics_team_id"
-                             referencedTableName="teams"
-                             referencedColumnNames="id"/>
+                             references="teams(id)"
+                             deleteCascade="true"/>
             </column>
 
             <column name="matches_played" type="INTEGER"/>
