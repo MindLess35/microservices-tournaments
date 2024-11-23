@@ -1,6 +1,6 @@
 package com.microservices.tournament.service.impl;
 
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.tournament.dto.tournament.TournamentCreateDto;
 import com.microservices.tournament.dto.tournament.TournamentReadDto;
 import com.microservices.tournament.dto.tournament.TournamentUpdateDto;
@@ -24,7 +24,7 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentReadDto findById(Long id) {
         return tournamentMapper.toDto(
                 tournamentRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_NOT_FOUND.formatted(id)))
+                        .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_NOT_FOUND.formatted(id)))
         );
     }
 
@@ -42,14 +42,14 @@ public class TournamentServiceImpl implements TournamentService {
                 .map(tournament -> tournamentMapper.updateEntity(dto, tournament))
                 .map(tournamentRepository::saveAndFlush)
                 .map(tournamentMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_NOT_FOUND.formatted(id)));
     }
 
     @Override
     @Transactional
     public void deleteTournament(Long id) {
         Tournament tournament = tournamentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_NOT_FOUND.formatted(id)));
         tournamentRepository.delete(tournament);
     }
 

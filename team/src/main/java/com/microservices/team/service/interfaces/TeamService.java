@@ -21,4 +21,6 @@ public interface TeamService {
     void checkUserExistenceById(Long userId);
 
     TeamReadDto createTeam(TeamCreateDto teamCreateDto);
+
+    void checkTeamsExists(Long firstTeamId, Long secondTeamId);
 }

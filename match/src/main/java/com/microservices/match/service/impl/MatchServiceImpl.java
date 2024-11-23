@@ -1,6 +1,7 @@
 package com.microservices.match.service.impl;
 
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.BadRequestBaseException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.match.dto.MatchCreateDto;
 import com.microservices.match.dto.MatchReadDto;
 import com.microservices.match.dto.MatchUpdateDto;
@@ -28,16 +29,37 @@ public class MatchServiceImpl implements MatchService {
     public MatchReadDto findById(Long id) {
         return matchRepository.findById(id)
                 .map(matchMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(MATCH_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(MATCH_NOT_FOUND.formatted(id)));
     }
 
     @Override
     @Transactional
     public MatchReadDto createMatch(MatchCreateDto dto) {
-        tournamentClient.getTournament(dto.tournamentId());
-        teamClient.checkTeamsExists(dto.firstTeamId(), dto.secondTeamId());
+        swapTeamIdsIfNecessary(dto);
+        Long firstTeamId = dto.getFirstTeamId();
+        Long secondTeamId = dto.getSecondTeamId();
+        if (firstTeamId.equals(secondTeamId)) {
+            throw new BadRequestBaseException("Team with id [%d] cannot play a match against itself".formatted(firstTeamId));
+        }
+        Long tournamentId = dto.getTournamentId();
+        if (matchRepository.existsBy(firstTeamId, secondTeamId, tournamentId)) {
+            throw new BadRequestBaseException("Match with firstTeamId [%d], secondTeamId [%d] and tournamentId [%d] is already exists"
+                    .formatted(firstTeamId, secondTeamId, tournamentId));
+        }
+
+        tournamentClient.checkTournamentExistence(tournamentId);
+        teamClient.checkTeamsExistence(firstTeamId, secondTeamId);
         Match match = matchMapper.toEntity(dto);
         return matchMapper.toDto(matchRepository.save(match));
+    }
+
+    private void swapTeamIdsIfNecessary(MatchCreateDto dto) {
+        Long firstTeamId = dto.getFirstTeamId();
+        Long secondTeamId = dto.getSecondTeamId();
+        if (firstTeamId < secondTeamId) {
+            dto.setFirstTeamId(secondTeamId);
+            dto.setSecondTeamId(firstTeamId);
+        }
     }
 
     @Override
@@ -47,13 +69,13 @@ public class MatchServiceImpl implements MatchService {
                 .map(match -> matchMapper.updateEntity(dto, match))
                 .map(matchRepository::save)
                 .map(matchMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(MATCH_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(MATCH_NOT_FOUND.formatted(id)));
     }
 
     @Override
     @Transactional
     public void deleteMatch(Long id) {
         matchRepository.delete(matchRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(MATCH_NOT_FOUND.formatted(id))));
+                .orElseThrow(() -> new NotFoundBaseException(MATCH_NOT_FOUND.formatted(id))));
     }
 }

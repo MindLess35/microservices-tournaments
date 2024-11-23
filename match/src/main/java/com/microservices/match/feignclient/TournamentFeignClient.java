@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "tournament-service", url = "${http.tournament-service-url}")
+@FeignClient(name = "tournament")
 public interface TournamentFeignClient {
 
-    @GetMapping("/{id}")
-    ResponseEntity<Void> getTournament(@PathVariable Long id);
+    @GetMapping("/api/v1/tournaments/{id}")
+    ResponseEntity<Void> checkTournamentExistence(@PathVariable Long id);
 }

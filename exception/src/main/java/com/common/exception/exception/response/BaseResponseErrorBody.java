@@ -2,14 +2,12 @@ package com.common.exception.exception.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Getter
 @SuperBuilder
-@RequiredArgsConstructor
 public abstract class BaseResponseErrorBody {
 
     @Builder.Default
@@ -19,8 +17,8 @@ public abstract class BaseResponseErrorBody {
 
     private final String cause;
 
-    private String exception;
+    private final String exception;
 
-    private String path;
+    private final String path;
 
 }

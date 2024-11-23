@@ -6,33 +6,42 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 
-public record MatchCreateDto(
-        @NotNull
-        SportType sportType,
+@Setter
+@Getter
+@AllArgsConstructor
+public final class MatchCreateDto {
 
-        @NotNull
-        @FutureOrPresent
-        Instant startDate,
+    @NotNull
+    private final SportType sportType;
 
-        @NotNull
-        @Future
-        Instant endDate,
+    @NotNull
+    @FutureOrPresent
+    private final Instant startDate;
 
-        @Size(max = 255)
-        String location,
+    @NotNull
+    @Future
+    private final Instant endDate;
 
-        @NotNull
-        @Positive
-        Long tournamentId,
+    @Size(max = 255)
+    private final String location;
 
-        @NotNull
-        @Positive
-        Long firstTeamId,
+    @NotNull
+    @Positive
+    private final Long tournamentId;
 
-        @NotNull
-        @Positive
-        Long secondTeamId) {
+    @NotNull
+    @Positive
+    private Long firstTeamId;
+
+    @NotNull
+    @Positive
+    private Long secondTeamId;
+
 }

@@ -1,7 +1,7 @@
 package com.microservices.tournament.service.impl;
 
 import com.common.exception.exception.base.BadRequestBaseException;
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.tournament.dto.team.TournamentTeamCreateDto;
 import com.microservices.tournament.dto.team.TournamentTeamReadDto;
 import com.microservices.tournament.dto.team.TournamentTeamUpdateDto;
@@ -32,7 +32,7 @@ public class TournamentTeamServiceImpl implements TournamentTeamService {
     public TournamentTeamReadDto findById(TournamentIdAndTeamId id) {
         return tournamentTeamMapper.toDto(
                 tournamentTeamRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)))
+                        .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)))
         );
     }
 
@@ -66,14 +66,14 @@ public class TournamentTeamServiceImpl implements TournamentTeamService {
                 .map(tournamentTeam -> tournamentTeamMapper.updateEntity(dto, tournamentTeam))
                 .map(tournamentTeamRepository::saveAndFlush)
                 .map(tournamentTeamMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)));
     }
 
     @Override
     @Transactional
     public void deleteTournamentTeam(TournamentIdAndTeamId id) {
         TournamentTeam tournamentTeam = tournamentTeamRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TOURNAMENT_TEAM_NOT_FOUND.formatted(id)));
         tournamentTeamRepository.delete(tournamentTeam);
     }
 }

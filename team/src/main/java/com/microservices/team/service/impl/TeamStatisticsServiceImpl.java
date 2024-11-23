@@ -1,6 +1,6 @@
 package com.microservices.team.service.impl;
 
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.team.dto.statistics.TeamStatisticsReadDto;
 import com.microservices.team.entity.TeamStatistics;
 import com.microservices.team.enums.MatchResultType;
@@ -28,7 +28,7 @@ public class TeamStatisticsServiceImpl implements TeamStatisticsService {
     @Override
     public TeamStatisticsReadDto findById(Long teamId) {
         return teamStatisticsMapper.toDto(teamStatisticsRepository.findById(teamId)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_STATS_NOT_FOUND.formatted(teamId))));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_STATS_NOT_FOUND.formatted(teamId))));
     }
 
     @EventListener
@@ -44,7 +44,7 @@ public class TeamStatisticsServiceImpl implements TeamStatisticsService {
     @Transactional
     public TeamStatisticsReadDto updateStatistics(Long teamId, MatchResultType matchResultType) {
         TeamStatistics teamStatistics = teamStatisticsRepository.findById(teamId)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_STATS_NOT_FOUND.formatted(teamId)));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_STATS_NOT_FOUND.formatted(teamId)));
 
         teamStatistics.setMatchesPlayed(teamStatistics.getMatchesPlayed() + 1);
         switch (matchResultType) {

@@ -1,7 +1,7 @@
 package com.microservices.team.service.impl;
 
 import com.common.exception.exception.base.BadRequestBaseException;
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.team.dto.member.TeamMemberCreateDto;
 import com.microservices.team.dto.member.TeamMemberReadDto;
 import com.microservices.team.dto.member.TeamMemberUpdateDto;
@@ -49,7 +49,7 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     public TeamMemberReadDto findById(TeamIdAndUserId id) {
         return teamMemberRepository.findById(id)
                 .map(teamMemberMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId())));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId())));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TeamMemberServiceImpl implements TeamMemberService {
                 .map(member -> teamMemberMapper.updateEntity(updateDto, member))
                 .map(teamMemberRepository::saveAndFlush)
                 .map(teamMemberMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId())));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId())));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     public void deleteTeamMember(TeamIdAndUserId id) {
         int deletedCount = teamMemberRepository.deleteTeamMemberById(id);
         if (deletedCount == 0) {
-            throw new ResourceNotFoundException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId()));
+            throw new NotFoundBaseException(TEAM_MEMBER_NOT_FOUND.formatted(id.teamId(), id.userId()));
         }
     }
 }

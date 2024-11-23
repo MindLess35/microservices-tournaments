@@ -1,6 +1,6 @@
 package com.microservices.user.service.impl;
 
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.user.dto.ChangePasswordDto;
 import com.microservices.user.dto.UserCreateDto;
 import com.microservices.user.dto.UserReadDto;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserReadDto findById(Long id) {
         return userMapper.toDto(userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(id))));
+                .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id))));
     }
 
     @Override
@@ -54,14 +54,14 @@ public class UserServiceImpl implements UserService {
                 .map(u -> userMapper.updateEntity(dto, u))
                 .map(userRepository::saveAndFlush)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id)));
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
         userRepository.delete(userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(id))));
+                .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id))));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("passwordConfirmation", "New password and its confirmation do not match");
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id)));
 
         if (!passwordEncoder.matches(passwordDto.currentPassword(), user.getPassword()))
             throw new InvalidPasswordException("wrongPassword", "Wrong password");

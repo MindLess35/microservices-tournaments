@@ -1,9 +1,9 @@
 package com.common.exception.exceptionhandler;
 
-import com.common.exception.exception.base.BadRequestBaseException;
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.BaseException;
 import com.common.exception.exception.response.ResponseErrorBody;
 import com.common.exception.exception.response.ResponseViolationErrorBody;
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -26,20 +25,15 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({Exception.class,
-            HttpServerErrorException.class})
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<ResponseErrorBody> handleUnexpectedException(Exception e, HttpServletRequest request) {
-        log.error(e.getMessage(), e);
         return buildErrorBody(INTERNAL_SERVER_ERROR, e, request);
     }
 
@@ -51,10 +45,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
-            BadRequestBaseException.class,
             HttpMediaTypeNotSupportedException.class,
             TypeMismatchException.class,
-//            PropertyReferenceException.class,
             MissingRequestValueException.class,
             HttpMediaTypeNotAcceptableException.class,
             NoResourceFoundException.class,
@@ -64,20 +56,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ResponseErrorBody> handleNotFoundException(ResourceNotFoundException e, HttpServletRequest request) {
-        return buildErrorBody(NOT_FOUND, e, request);
+    public ResponseEntity<ResponseErrorBody> handleBaseException(BaseException e, HttpServletRequest request) {
+        return buildErrorBody(HttpStatus.valueOf(e.getStatus()), e, request);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ResponseErrorBody> handleHttpClientErrorException(HttpClientErrorException e, HttpServletRequest request) {
-        return switch (e.getStatusCode().value()) {
-            case 401 -> buildErrorBody(UNAUTHORIZED, e, request);
-            case 403 -> buildErrorBody(FORBIDDEN, e, request);
-            case 404 -> buildErrorBody(NOT_FOUND, e, request);
-            case 413 -> buildErrorBody(PAYLOAD_TOO_LARGE, e, request);
-            default -> buildErrorBody(BAD_REQUEST, e, request);
-        };
+    public ResponseEntity<ResponseErrorBody> handleHttpClientErrorException(HttpStatusCodeException e, HttpServletRequest request) {
+        return buildErrorBody(HttpStatus.valueOf(e.getStatusCode().value()), e, request);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ResponseErrorBody> handleFeignException(FeignException e, HttpServletRequest request) {
+        return buildErrorBody(HttpStatus.valueOf(e.status()), e, request);
+    }
+
 //    @ExceptionHandler({AuthenticationException.class})
 //    public ResponseEntity<ResponseErrorBody> handleUnauthorizedException(Exception e, HttpServletRequest request) {
 //        return buildErrorBody(UNAUTHORIZED, e, request);
@@ -103,14 +95,18 @@ public class GlobalExceptionHandler {
     }
 
     private static ResponseEntity<ResponseErrorBody> buildErrorBody(HttpStatus httpStatus, Exception e, HttpServletRequest request) {
-        if (!httpStatus.is5xxServerError())
-            log.debug(e.getMessage(), e);
+        String message = e.getMessage();
+        if (httpStatus.is5xxServerError()) {
+            log.error(message, e);
+        } else {
+            log.debug(message, e);
+        }
         return ResponseEntity.status(httpStatus)
                 .body(ResponseErrorBody.builder()
                         .status(httpStatus.value())
                         .cause(httpStatus.getReasonPhrase())
                         .exception(e.getClass().getName())
-                        .message(e.getMessage())
+                        .message(message)
                         .path(request.getRequestURI())
                         .build());
     }

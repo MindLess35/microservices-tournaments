@@ -1,7 +1,7 @@
 package com.microservices.team.service.impl;
 
 import com.common.exception.exception.base.BadRequestBaseException;
-import com.common.exception.exception.base.ResourceNotFoundException;
+import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.team.dto.team.TeamCreateDto;
 import com.microservices.team.dto.team.TeamReadDto;
 import com.microservices.team.dto.team.TeamUpdateDto;
@@ -15,10 +15,13 @@ import com.microservices.team.repository.TeamRepository;
 import com.microservices.team.service.interfaces.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,14 +46,24 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team findTeamById(Long id) {
         return teamRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_NOT_FOUND.formatted(id)));
     }
 
     @Override
     public void checkExistenceById(Long id) {
         boolean isExists = teamRepository.existsById(id);
         if (!isExists)
-            throw new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id));
+            throw new NotFoundBaseException(TEAM_NOT_FOUND.formatted(id));
+    }
+
+    @Override
+    public void checkTeamsExists(Long firstTeamId, Long secondTeamId) {
+        List<Long> teamIds = new ArrayList<>(List.of(firstTeamId, secondTeamId));
+        List<Team> teams = teamRepository.findTeamsByIds(teamIds, Pageable.unpaged());
+        if (teams.size() == 1 || teams.isEmpty()) {
+            teamIds.removeAll(teams.stream().map(Team::getId).toList());
+            throw new NotFoundBaseException("Team(s) with id(s)" + teamIds + "not found");
+        }
     }
 
     @Override
@@ -70,7 +83,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public TeamReadDto updateTeam(Long id, TeamUpdateDto dto) {
         Team team = teamRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_NOT_FOUND.formatted(id)));
+                .orElseThrow(() -> new NotFoundBaseException(TEAM_NOT_FOUND.formatted(id)));
 
         Long captainId = dto.captainId();
         Long currentCaptainId = team.getCaptainId();

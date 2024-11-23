@@ -1,15 +1,9 @@
 package com.common.exception.exception.base;
 
-public class BadRequestBaseException extends RuntimeException {
+public class BadRequestBaseException extends BaseException {
+
     public BadRequestBaseException(String message) {
-        super(message);
+        super(400, message);
     }
 
-    public BadRequestBaseException(Throwable cause) {
-        super(cause);
-    }
-
-    public BadRequestBaseException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

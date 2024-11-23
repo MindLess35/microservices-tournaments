@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -33,6 +34,12 @@ public class TeamController {
     @GetMapping("/{id}")
     public ResponseEntity<TeamReadDto> getTeam(@PathVariable("id") Long id) {
         return ResponseEntity.ok(teamService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<Void> checkTeamsExists(@RequestParam Long firstTeamId, @RequestParam Long secondTeamId) {
+        teamService.checkTeamsExists(firstTeamId, secondTeamId);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
