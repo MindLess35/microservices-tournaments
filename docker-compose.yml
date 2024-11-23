@@ -195,6 +195,44 @@ services:
       - "5435:5432"
 
 
+  notification-service:
+#    image: notification-service:1.0
+    build:
+      context: ./notification
+    container_name: notification-service
+    networks:
+      - microservices-network
+      - notification-service-network
+    depends_on:
+#      - config-server
+#      - discovery-server
+      - postgres-for-notification-service
+    environment:
+      - SERVER_PORT=8060
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-notification-service:5436/notification
+      - SPRING_DATASOURCE_USERNAME=nikita
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=notifications
+    ports:
+      - "8060:8060"
+
+
+  postgres-for-notification-service:
+    image: postgres:15.6
+    container_name: postgres-for-notification-service
+    networks:
+      - notification-service-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=notification
+    volumes:
+      - ./notification/src/main/resources/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres-for-notification-service:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
+
 
 networks:
   microservices-network:
@@ -212,6 +250,9 @@ networks:
   match-service-network:
     driver: bridge
 
+  notification-service-network:
+    driver: bridge
+
 
 volumes:
   postgres-for-user-service:
@@ -224,4 +265,7 @@ volumes:
     driver: local
 
   postgres-for-match-service:
+    driver: local
+
+  notification-for-match-service:
     driver: local

@@ -84,8 +84,8 @@ CREATE TABLE matches (
 );
 
 
--- email notification service
-CREATE TABLE email_notifications (
+-- notification service
+CREATE TABLE notifications (
     id              BIGSERIAL       PRIMARY KEY,
     user_id         BIGINT          NOT NULL,
     event_type      VARCHAR(128)    NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE email_notifications (
     created_at      TIMESTAMP       NOT NULL
 );
 
-CREATE INDEX idx_email_notifications_user_id ON email_notifications(user_id);
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 
 
 -- feed service

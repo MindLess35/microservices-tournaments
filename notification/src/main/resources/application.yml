@@ -1,13 +1,15 @@
+server:
+  port: 8060
 
 spring:
   application:
-    name: user
+    name: notification
 
   config:
     import: optional:configserver:http://localhost:8000
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/user
+    url: jdbc:postgresql://localhost:5436/notification
     username: nikita
     password: 1234
 
@@ -18,7 +20,21 @@ spring:
         show_sql: true
         format_sql: true
         hbm2ddl.auto: validate
-        default_schema: users
+        default_schema: notifications
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: readingbooksjms@gmail.com
+    password:
+
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   liquibase:
     enabled: true
@@ -37,6 +53,3 @@ logging:
 #        data:
 #          redis:
 #            core: TRACE
-server:
-  port: 8020
-

@@ -1,4 +1,4 @@
-package com.microservices.match.feignclient;
+package com.microservices.match.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

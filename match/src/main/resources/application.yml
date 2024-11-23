@@ -37,7 +37,7 @@ logging:
   level:
     org:
       hibernate.orm.jdbc.bind: TRACE
-      #      elasticsearch.feignclient: TRACE
+      #      elasticsearch.client: TRACE
       springframework:
         jdbc.core: TRACE
 #        cache: TRACE

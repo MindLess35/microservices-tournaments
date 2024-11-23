@@ -5,6 +5,7 @@ import com.microservices.user.exception.InvalidPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,21 +16,21 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(InvalidPasswordException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseViolationErrorBody handleInvalidPasswordException(InvalidPasswordException e, HttpServletRequest request) {
-        ResponseViolationErrorBody result = buildViolationErrorBody(HttpStatus.BAD_REQUEST, e, request);
-        result.setFieldErrors(Map.of(e.getInvalidFieldName(), e.getMessage()));
+    @ExceptionHandler
+    public ResponseEntity<ResponseViolationErrorBody> handleInvalidPasswordException(InvalidPasswordException e, HttpServletRequest request) {
+        ResponseEntity<ResponseViolationErrorBody> result = buildViolationErrorBody(HttpStatus.BAD_REQUEST, e, request);
+        result.getBody().setFieldErrors(Map.of(e.getInvalidFieldName(), e.getMessage()));
         return result;
     }
 
-    private static ResponseViolationErrorBody buildViolationErrorBody(HttpStatus httpStatus, Exception e, HttpServletRequest request) {
+    private static ResponseEntity<ResponseViolationErrorBody> buildViolationErrorBody(HttpStatus httpStatus, Exception e, HttpServletRequest request) {
         log.debug(e.getMessage(), e);
-        return ResponseViolationErrorBody.builder()
-                .status(httpStatus.value())
-                .cause(httpStatus.getReasonPhrase())
-                .exception(e.getClass().getName())
-                .path(request.getRequestURI())
-                .build();
+        return ResponseEntity.status(httpStatus)
+                .body(ResponseViolationErrorBody.builder()
+                        .status(httpStatus.value())
+                        .cause(httpStatus.getReasonPhrase())
+                        .exception(e.getClass().getName())
+                        .path(request.getRequestURI())
+                        .build());
     }
 }
