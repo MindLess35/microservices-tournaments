@@ -1,6 +1,6 @@
-package com.microservices.user.config;
+package com.microservices.notification.config;
 
-import com.microservices.user.property.MailProperties;
+import com.microservices.notification.property.MailProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

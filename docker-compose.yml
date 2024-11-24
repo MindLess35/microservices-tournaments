@@ -43,6 +43,44 @@ services:
     ports:
       - "8010:8010"
 
+
+  zookeeper:
+    image: bitnami/zookeeper:3.8.4
+    container_name: zookeeper
+    networks:
+      - kafka-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ALLOW_ANONYMOUS_LOGIN: yes
+    ports:
+      - "2181:2181"
+
+
+  kafka:
+    image: bitnami/kafka:3.9.0
+    container_name: kafka
+    networks:
+      - microservices-network
+      - kafka-network
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_CREATE_TOPICS:
+#        - dresses:1:1
+#        - ratings:1:1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER:PLAINTEXT,LOCAL:PLAINTEXT
+      KAFKA_LISTENERS: DOCKER://:9093,LOCAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER://kafka:9093,LOCAL://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+
+
   user-service:
 #    image: user-service:1.0
     build:
@@ -234,8 +272,12 @@ services:
 
 
 
+
 networks:
   microservices-network:
+    driver: bridge
+
+  kafka-network:
     driver: bridge
 
   user-service-network:
@@ -254,6 +296,7 @@ networks:
     driver: bridge
 
 
+
 volumes:
   postgres-for-user-service:
     driver: local
@@ -267,5 +310,6 @@ volumes:
   postgres-for-match-service:
     driver: local
 
-  notification-for-match-service:
+  postgres-for-notification-service:
     driver: local
+

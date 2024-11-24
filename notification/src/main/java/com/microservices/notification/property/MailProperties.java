@@ -1,4 +1,4 @@
-package com.microservices.user.property;
+package com.microservices.notification.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Properties;

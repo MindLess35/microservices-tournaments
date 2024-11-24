@@ -1,4 +1,4 @@
-package com.microservices.user.enums;
+package com.microservices.notification.enums;
 
 public enum EventType {
     TOURNAMENT_APPROVED,
