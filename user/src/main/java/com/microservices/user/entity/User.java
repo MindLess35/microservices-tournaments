@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 
 @Setter
 @Getter
@@ -33,13 +35,13 @@ public class User extends AuditingEntityBase {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private UUID keycloakUuid;
+
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column(length = 255)
     private String about;

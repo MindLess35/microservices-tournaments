@@ -1,9 +1,10 @@
 -- team service
 CREATE TABLE users (
     id              BIGSERIAL      PRIMARY KEY,
+    keycloak_uuid   UUID           UNIQUE,
     username        VARCHAR(64)    UNIQUE NOT NULL,
     email           VARCHAR(255)   UNIQUE NOT NULL,
-    password        VARCHAR(255)   NOT NULL,
+--     password        VARCHAR(255)   NOT NULL,
     about           VARCHAR(512),
     gender          CHAR(1),
     role            VARCHAR(32)    NOT NULL,

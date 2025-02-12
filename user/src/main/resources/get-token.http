@@ -1,0 +1,21 @@
+POST http://localhost:8888/realms/tournaments/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=user&
+client_secret=QI7KkiBpFF5EAAkR3Z3MNCl6wtMmsdl1&
+username=nikita&
+password=1234&
+grant_type=password
+
+
+#
+# curl -X POST "http://localhost:8888/realms/tournaments/protocol/openid-connect/token"
+#     -H "Content-Type: application/x-www-form-urlencoded"
+#     -d "client_id=user"
+#     -d "client_secret=QI7KkiBpFF5EAAkR3Z3MNCl6wtMmsdl1"
+#     -d "username=nikita"
+#     -d "password=1234"
+#     -d "grant_type=password"
+
+
+

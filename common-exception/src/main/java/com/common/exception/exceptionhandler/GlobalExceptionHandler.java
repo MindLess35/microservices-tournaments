@@ -1,6 +1,7 @@
 package com.common.exception.exceptionhandler;
 
 import com.common.exception.exception.base.BaseException;
+import com.common.exception.exception.base.UnauthorizedBaseException;
 import com.common.exception.exception.response.ResponseErrorBody;
 import com.common.exception.exception.response.ResponseViolationErrorBody;
 import feign.FeignException;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @RestControllerAdvice
@@ -70,11 +72,11 @@ public class GlobalExceptionHandler {
         return buildErrorBody(HttpStatus.valueOf(e.status()), e, request);
     }
 
-//    @ExceptionHandler({AuthenticationException.class})
+//    @ExceptionHandler({UnauthorizedBaseException.class})
 //    public ResponseEntity<ResponseErrorBody> handleUnauthorizedException(Exception e, HttpServletRequest request) {
 //        return buildErrorBody(UNAUTHORIZED, e, request);
 //    }
-//
+
 //    @ExceptionHandler({AccessDeniedException.class})
 //    public ResponseEntity<ResponseErrorBody> handleAccessDeniedException(Exception e, HttpServletRequest request) {
 //        return buildErrorBody(FORBIDDEN, e, request);

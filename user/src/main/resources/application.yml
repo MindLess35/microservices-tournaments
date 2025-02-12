@@ -1,3 +1,11 @@
+keycloak:
+  auth-server-url: http://localhost:8888/
+  realm: tournaments
+  client-id: user
+  client-secret: QI7KkiBpFF5EAAkR3Z3MNCl6wtMmsdl1
+  username: nikita
+  password: 1234
+
 
 spring:
   application:
@@ -20,6 +28,22 @@ spring:
         hbm2ddl.auto: validate
         default_schema: users
 
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/tournaments
+#      client:
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:9090/realms/OauthTests
+#            user-name-attribute: preferred_username
+#        registration:
+#          keycloak:
+#            client-id: myclient
+#            client-secret: SECRET
+#            scope: openid
+
   liquibase:
     enabled: true
     change-log: liquibase/changelog-master.xml
@@ -32,6 +56,7 @@ logging:
       hibernate.orm.jdbc.bind: TRACE
 #      elasticsearch.client: TRACE
       springframework:
+        security: TRACE
         jdbc.core: TRACE
 #        cache: TRACE
 #        data:

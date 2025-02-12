@@ -124,8 +124,8 @@
 
         <dependency>
             <groupId>com.common</groupId>
-            <artifactId>common-starter-exception</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>common-exception</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>

@@ -1,6 +1,5 @@
 package com.microservices.user.controller;
 
-import com.microservices.user.dto.ChangePasswordDto;
 import com.microservices.user.dto.UserCreateDto;
 import com.microservices.user.dto.UserReadDto;
 import com.microservices.user.dto.UserUpdateDto;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@Tag(name = "User Controller", description = "Controller for working with the team. The creation" +
-                                             " of the team and the sing-in to the application is in the" +
+@Tag(name = "User Controller", description = "Controller for working with the user. The creation" +
+                                             " of the user and the sing-in to the application is in the" +
                                              " Authentication Controller")
 @RestController
 @RequiredArgsConstructor
@@ -32,38 +30,38 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Returns representation of team")
+    @Operation(summary = "Returns representation of user")
     @PostMapping("/sign-up")
     public ResponseEntity<UserReadDto> register(@RequestBody @Validated UserCreateDto userCreateDto) {
         return ResponseEntity.status(CREATED).body(userService.createUser(userCreateDto));
     }
 
-    @Operation(summary = "Returns representation of team")
+    @Operation(summary = "Returns representation of user")
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> getUser(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @Operation(summary = "Returns updated representation of team")
+    @Operation(summary = "Returns updated representation of user")
     @PutMapping("/{id}")
     public ResponseEntity<UserReadDto> updateUser(@PathVariable("id") Long id,
                                                   @RequestBody @Validated UserUpdateDto userUpdateDto) {
         return ResponseEntity.ok(userService.updateUser(id, userUpdateDto));
     }
 
-    @Operation(summary = "Deletes the team")
+    @Operation(summary = "Deletes the user")
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Changes the team's password")
-    @PatchMapping("{id}/password")
-    public ResponseEntity<HttpStatus> changePassword(@PathVariable("id") Long id,
-                                                     @RequestBody @Validated ChangePasswordDto changePasswordDto) {
-        userService.changePassword(id, changePasswordDto);
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(summary = "Changes the user's password")
+//    @PatchMapping("{id}/password")
+//    public ResponseEntity<HttpStatus> changePassword(@PathVariable("id") Long id,
+//                                                     @RequestBody @Validated ChangePasswordDto changePasswordDto) {
+//        userService.changePassword(id, changePasswordDto);
+//        return ResponseEntity.ok().build();
+//    }
 
 }

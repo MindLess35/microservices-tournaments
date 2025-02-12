@@ -6,4 +6,7 @@ public class NotFoundBaseException extends BaseException {
         super(404, message);
     }
 
+    public NotFoundBaseException(String message, Throwable cause) {
+        super(message, cause, 404);
+    }
 }

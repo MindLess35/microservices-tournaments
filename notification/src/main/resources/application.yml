@@ -22,16 +22,16 @@ spring:
         hbm2ddl.auto: validate
         default_schema: notifications
 
-  kafka:
-    consumer:
-      bootstrap-servers: localhost:9092
-      group-id:
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: *
-        spring.json.type.mapping:
+#  kafka:
+#    consumer:
+#      bootstrap-servers: localhost:9092
+#      group-id:
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      properties:
+#        spring.json.trusted.packages: *
+#        spring.json.type.mapping:
 
   mail:
     host: smtp.gmail.com

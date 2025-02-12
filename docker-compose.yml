@@ -271,6 +271,45 @@ services:
       - "5436:5432"
 
 
+  keycloak:
+    image: bitnami/keycloak:26.0.5-debian-12-r1
+    container_name: keycloak
+    networks:
+      - microservices-network
+      - keycloak-network
+    environment:
+#      - KEYCLOAK_CREATE_ADMIN_USER=false
+      - KEYCLOAK_ADMIN=nikita
+      - KEYCLOAK_ADMIN_PASSWORD=1234
+#      - KEYCLOAK_USER=nikita
+#      - KEYCLOAK_PASSWORD=1234
+      - KEYCLOAK_DATABASE_USER=nikita
+      - KEYCLOAK_DATABASE_PASSWORD=1234
+      - KEYCLOAK_DATABASE_NAME=keycloak_tournaments
+      - KEYCLOAK_DATABASE_HOST=postgres-for-keycloak
+      - KEYCLOAK_DATABASE_PORT=5432
+    depends_on:
+      - postgres-for-keycloak
+    ports:
+      - "8888:8080"
+
+
+  postgres-for-keycloak:
+    image: postgres:15.6
+    container_name: postgres-for-keycloak
+    networks:
+      - keycloak-network
+    environment:
+      - POSTGRES_USER=nikita
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=keycloak_tournaments
+    volumes:
+      - postgres-for-keycloak:/var/lib/postgresql/data
+
+
+
+
+
 
 
 networks:
@@ -295,6 +334,9 @@ networks:
   notification-service-network:
     driver: bridge
 
+  keycloak-network:
+    driver: bridge
+
 
 
 volumes:
@@ -311,5 +353,8 @@ volumes:
     driver: local
 
   postgres-for-notification-service:
+    driver: local
+
+  postgres-for-keycloak:
     driver: local
 

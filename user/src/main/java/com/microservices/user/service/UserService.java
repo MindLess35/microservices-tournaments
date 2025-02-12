@@ -12,7 +12,7 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    void changePassword(Long id, ChangePasswordDto passwordDto);
+//    void changePassword(Long id, ChangePasswordDto passwordDto);
 
     UserReadDto findById(Long id);
 
