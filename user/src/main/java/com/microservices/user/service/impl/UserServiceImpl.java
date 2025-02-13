@@ -1,14 +1,17 @@
 package com.microservices.user.service.impl;
 
 import com.common.exception.exception.base.NotFoundBaseException;
+import com.microservices.user.dto.LoginResponseDto;
 import com.microservices.user.dto.UserCreateDto;
+import com.microservices.user.dto.UserLoginDto;
 import com.microservices.user.dto.UserReadDto;
 import com.microservices.user.dto.UserUpdateDto;
 import com.microservices.user.entity.User;
 import com.microservices.user.event.UserCreatedEvent;
 import com.microservices.user.mapper.UserMapper;
 import com.microservices.user.repository.UserRepository;
-import com.microservices.user.service.UserService;
+import com.microservices.user.service.interfaces.KeycloakService;
+import com.microservices.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final KeycloakServiceImpl keycloakServiceImpl;
+    private final KeycloakService keycloakService;
     private final ApplicationEventPublisher eventPublisher;
     private static final String USER_NOT_FOUND = "User with id [%d] not found";
 
@@ -33,12 +36,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserReadDto createUser(UserCreateDto userCreateDto) {
-        UUID userUuid = keycloakServiceImpl.createUser(userCreateDto);
+        UUID userUuid = keycloakService.createUser(userCreateDto);
         return Optional.of(userCreateDto)
                 .map(userMapper::toEntity)
-                .map(u -> {
-                    u.setKeycloakUuid(userUuid);
-                    return u;
+                .map(user -> {
+                    user.setKeycloakUuid(userUuid);
+                    return user;
                 })
                 .map(userRepository::save)
                 .map(userMapper::toDto)
@@ -51,7 +54,12 @@ public class UserServiceImpl implements UserService {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     public void handleUserCreationRollback(UserCreatedEvent event) {
-        keycloakServiceImpl.deleteUser(event.userUuid());
+        keycloakService.deleteUser(event.userUuid());
+    }
+
+    @Override
+    public LoginResponseDto authenticate(UserLoginDto userLoginDto) {
+        return keycloakService.authenticate(userLoginDto);
     }
 
     @Override
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id)));
         userRepository.delete(user);
-        keycloakServiceImpl.deleteUser(user.getKeycloakUuid());
+        keycloakService.deleteUser(user.getKeycloakUuid());
     }
 
 //    @Override

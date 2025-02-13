@@ -3,7 +3,6 @@ package com.microservices.user.repository;
 import com.microservices.user.entity.User;
 import com.microservices.user.projection.UsernameAndEmailProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 

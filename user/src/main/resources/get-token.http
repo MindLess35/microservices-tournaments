@@ -2,9 +2,9 @@ POST http://localhost:8888/realms/tournaments/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 client_id=user&
-client_secret=QI7KkiBpFF5EAAkR3Z3MNCl6wtMmsdl1&
-username=nikita&
-password=1234&
+client_secret=L5XUWUCutsXlXT0x0qcULSDQuznYqqvW&
+username=111&
+password=1&
 grant_type=password
 
 

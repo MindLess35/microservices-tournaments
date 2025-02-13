@@ -1,10 +1,12 @@
 keycloak:
-  auth-server-url: http://localhost:8888/
+  auth-server-url: http://localhost:8888
   realm: tournaments
-  client-id: user
-  client-secret: QI7KkiBpFF5EAAkR3Z3MNCl6wtMmsdl1
-  username: nikita
-  password: 1234
+  client-id: admin-cli
+  client-secret: nUrAUYb1Q09zF1HmFgYk7FlnVdlMl0LR
+
+  user-client-id: user
+  user-client-secret: L5XUWUCutsXlXT0x0qcULSDQuznYqqvW
+  grant-type: password
 
 
 spring:
@@ -58,6 +60,8 @@ logging:
       springframework:
         security: TRACE
         jdbc.core: TRACE
+        cloud:
+          openfeign: TRACE
 #        cache: TRACE
 #        data:
 #          redis:

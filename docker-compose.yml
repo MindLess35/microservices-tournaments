@@ -278,11 +278,8 @@ services:
       - microservices-network
       - keycloak-network
     environment:
-#      - KEYCLOAK_CREATE_ADMIN_USER=false
       - KEYCLOAK_ADMIN=nikita
       - KEYCLOAK_ADMIN_PASSWORD=1234
-#      - KEYCLOAK_USER=nikita
-#      - KEYCLOAK_PASSWORD=1234
       - KEYCLOAK_DATABASE_USER=nikita
       - KEYCLOAK_DATABASE_PASSWORD=1234
       - KEYCLOAK_DATABASE_NAME=keycloak_tournaments

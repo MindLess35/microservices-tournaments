@@ -1,11 +1,11 @@
 package com.microservices.user.controller;
 
+import com.microservices.user.dto.LoginResponseDto;
 import com.microservices.user.dto.UserCreateDto;
+import com.microservices.user.dto.UserLoginDto;
 import com.microservices.user.dto.UserReadDto;
 import com.microservices.user.dto.UserUpdateDto;
-import com.microservices.user.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.microservices.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,37 +19,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
-@Tag(name = "User Controller", description = "Controller for working with the user. The creation" +
-                                             " of the user and the sing-in to the application is in the" +
-                                             " Authentication Controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
+    private static final String X_REFRESH_TOKEN = "X-Refresh-Token";
 
-    @Operation(summary = "Returns representation of user")
     @PostMapping("/sign-up")
     public ResponseEntity<UserReadDto> register(@RequestBody @Validated UserCreateDto userCreateDto) {
         return ResponseEntity.status(CREATED).body(userService.createUser(userCreateDto));
     }
 
-    @Operation(summary = "Returns representation of user")
+    @PostMapping("/sign-in")
+    public ResponseEntity<String> login(@RequestBody @Validated UserLoginDto userLoginDto) {
+        LoginResponseDto dto = userService.authenticate(userLoginDto);
+        String tokenTypeWithWhitespace = dto.tokenType() + " ";
+        String cookie = String.format(X_REFRESH_TOKEN + "=%s; HttpOnly; Secure; Path=/; Max-Age=%d",
+                tokenTypeWithWhitespace + dto.refreshToken(), dto.refreshExpiresIn());
+
+        return ResponseEntity
+                .status(OK)
+                .header(AUTHORIZATION, tokenTypeWithWhitespace + dto.accessToken())
+                .header(SET_COOKIE, cookie)
+                .build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> getUser(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @Operation(summary = "Returns updated representation of user")
     @PutMapping("/{id}")
     public ResponseEntity<UserReadDto> updateUser(@PathVariable("id") Long id,
                                                   @RequestBody @Validated UserUpdateDto userUpdateDto) {
         return ResponseEntity.ok(userService.updateUser(id, userUpdateDto));
     }
 
-    @Operation(summary = "Deletes the user")
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);

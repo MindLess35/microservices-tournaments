@@ -18,11 +18,9 @@ public class KeycloakConfig {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakProperties.authServerUrl())
                 .realm(keycloakProperties.realm())
-                .grantType(OAuth2Constants.PASSWORD)
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(keycloakProperties.clientId())
                 .clientSecret(keycloakProperties.clientSecret())
-                .username(keycloakProperties.username())
-                .password(keycloakProperties.password())
                 .build();
     }
 }
