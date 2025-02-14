@@ -40,6 +40,12 @@ public class User extends AuditingEntityBase {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, length = 64)
+    private String firstName;
+
+    @Column(nullable = false, length = 64)
+    private String lastName;
+
     @Column(nullable = false, unique = true)
     private String email;
 

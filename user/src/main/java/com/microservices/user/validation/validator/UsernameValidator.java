@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.StringUtils;
 
 public class UsernameValidator implements ConstraintValidator<Username, String> {
-    private static final String USERNAME_PATTERN = "^[A-Za-zА-Яа-я0-9(){}\\[\\]!@#$%^&*_-]{4,64}$";
+    private static final String USERNAME_PATTERN = "^[A-Za-zА-Яа-я0-9(){}\\[\\]!@#$%^&*_-]{3,64}$";
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {

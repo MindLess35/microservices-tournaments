@@ -9,6 +9,9 @@ keycloak:
   grant-type: password
 
 
+server:
+  port: 8020
+
 spring:
   application:
     name: user
@@ -58,7 +61,7 @@ logging:
       hibernate.orm.jdbc.bind: TRACE
 #      elasticsearch.client: TRACE
       springframework:
-        security: TRACE
+    #        security: TRACE
         jdbc.core: TRACE
         cloud:
           openfeign: TRACE
@@ -66,6 +69,4 @@ logging:
 #        data:
 #          redis:
 #            core: TRACE
-server:
-  port: 8020
 

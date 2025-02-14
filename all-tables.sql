@@ -3,6 +3,8 @@ CREATE TABLE users (
     id              BIGSERIAL      PRIMARY KEY,
     keycloak_uuid   UUID           UNIQUE,
     username        VARCHAR(64)    UNIQUE NOT NULL,
+    first_name      VARCHAR(64)    NOT NULL,
+    last_name       VARCHAR(64)    NOT NULL,
     email           VARCHAR(255)   UNIQUE NOT NULL,
     about           VARCHAR(512),
     gender          CHAR(1),

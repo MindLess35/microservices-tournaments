@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
     private final UserRepository userRepository;
-    private static final String USERNAME_PATTERN = "^[A-Za-zА-Яа-я0-9!()\\[\\]{}@#?$%^&*_-]{4,32}$";
+    private static final String USERNAME_PATTERN = "^[A-Za-zА-Яа-я0-9!()\\[\\]{}@#?$%^&*_-]{3,32}$";
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {

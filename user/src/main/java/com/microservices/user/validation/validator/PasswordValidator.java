@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.regex.Pattern;
 
 public class PasswordValidator implements ConstraintValidator<Password, String> {
-    private static final int MIN_LENGTH = 8;
+    private static final int MIN_LENGTH = 1;
     private static final int MAX_LENGTH = 64;
     private static final Pattern LOWER_CASE = Pattern.compile("[a-zа-я]");
     private static final Pattern UPPER_CASE = Pattern.compile("[A-ZА-Я]");

@@ -1,12 +1,14 @@
 package com.microservices.user.enums;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Getter;
 
+@Getter
 public enum Role {
-    PLAYER("player"),
-    TRAINER("trainer"),
-    ORGANIZER("organizer"),
-    ADMIN("admin");
+    ROLE_USER("USER"),
+    ROLE_PLAYER("PLAYER"),
+    ROLE_TRAINER("TRAINER"),
+    ROLE_ORGANIZER("ORGANIZER"),
+    ROLE_ADMIN("ADMIN");
 
     private final String value;
 
@@ -14,13 +16,4 @@ public enum Role {
         this.value = value;
     }
 
-    @JsonCreator
-    public static Role fromValue(String value) {
-        for (Role role : Role.values()) {
-            if (role.value.equalsIgnoreCase(value)) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("Unknown role: " + value);
-    }
 }

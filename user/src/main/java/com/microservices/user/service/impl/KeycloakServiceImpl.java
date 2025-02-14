@@ -17,10 +17,15 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,17 +40,26 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public UUID createUser(UserCreateDto userCreateDto) {
         UserRepresentation user = keycloakMapper.toKeycloakUser(userCreateDto);
-        try (Response response = keycloak
-                .realm(keycloakProperties.realm())
-                .users()
-                .create(user)) {
+        RealmResource realmResource = keycloak.realm(keycloakProperties.realm());
+        UsersResource usersResource = realmResource.users();
 
+        try (Response response = usersResource.create(user)) {
             int status = response.getStatus();
             if (status == 409)
                 throw new ConflictBaseException(response.getStatusInfo().getReasonPhrase());
 
-            String location = response.getHeaderString("Location");
-            String userUuid = location.substring(location.lastIndexOf("/") + 1);
+            String userUuid = CreatedResponseUtil.getCreatedId(response);
+            RoleRepresentation roleRepresentation = realmResource
+                    .roles()
+                    .get(userCreateDto.role().getValue())
+                    .toRepresentation();
+
+            usersResource
+                    .get(userUuid)
+                    .roles()
+                    .realmLevel()
+                    .add(Collections.singletonList(roleRepresentation));
+
             return UUID.fromString(userUuid);
 
         } catch (ProcessingException ex) {
