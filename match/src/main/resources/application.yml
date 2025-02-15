@@ -1,6 +1,6 @@
-http:
-  team-service-url: http://team/api/v1/teams/
-  tournament-service-url: http://tournament/api/v1/tournaments/
+#http:
+#  team-service-url: http://team/api/v1/teams/
+#  tournament-service-url: http://tournament/api/v1/tournaments/
 
 
 server:
@@ -9,9 +9,11 @@ server:
 spring:
   application:
     name: match
-
   config:
     import: optional:configserver:http://localhost:8000
+
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
     url: jdbc:postgresql://localhost:5435/match
@@ -27,28 +29,46 @@ spring:
         hbm2ddl.auto: validate
         default_schema: matches
 
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.type.mapping:
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/tournaments
+
+  #  kafka:
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      properties:
+#        spring.json.type.mapping:
 
   liquibase:
     enabled: true
     change-log: liquibase/changelog-master.xml
     default-schema: ${spring.jpa.properties.hibernate.default_schema}
 
-logging:
-  #  config: classpath:/logging/logback-spring.xml
-  level:
-    org:
-      hibernate.orm.jdbc.bind: TRACE
-      #      elasticsearch.client: TRACE
-      springframework:
-        jdbc.core: TRACE
-#        cache: TRACE
-#        data:
-#          redis:
-#            core: TRACE
+#  cloud:
+#    openfeign:
+#      client:
+#        config:
+#          default:
+#            loggerLevel: FULL
+
+#logging:
+#  level:
+#    org:
+#      hibernate.orm.jdbc.bind: TRACE
+#      springframework:
+#        jdbc.core: TRACE
+#        security: TRACE
+#    feign: TRACE
+#    feign.Logger: TRACE
+#    org.springframework.cloud.openfeign.FeignClient: TRACE
+#    org.springframework.cloud.openfeign.loadbalancer: TRACE
+#    org.springframework.security.oauth2: TRACE
+#    org.springframework.security.oauth2.client: TRACE
+#    org.springframework.security.oauth2.client.registration: TRACE
+#    org.springframework.security.oauth2.client.web: TRACE
+#    org.keycloak: TRACE
+#    org.apache.http: TRACE

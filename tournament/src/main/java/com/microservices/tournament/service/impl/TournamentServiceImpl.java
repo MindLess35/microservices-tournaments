@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TournamentServiceImpl implements TournamentService {
     private final TournamentRepository tournamentRepository;
     private final TournamentMapper tournamentMapper;
-    public static final String TOURNAMENT_NOT_FOUND = "Tournament with id [%d] not found";
+    private static final String TOURNAMENT_NOT_FOUND = "Tournament with id [%d] not found";
 
     @Override
     public TournamentReadDto findById(Long id) {

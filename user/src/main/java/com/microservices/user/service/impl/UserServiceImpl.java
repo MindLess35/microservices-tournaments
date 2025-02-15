@@ -1,6 +1,7 @@
 package com.microservices.user.service.impl;
 
 import com.common.exception.exception.base.NotFoundBaseException;
+import com.microservices.user.client.TeamFeignClient;
 import com.microservices.user.dto.LoginResponseDto;
 import com.microservices.user.dto.UserCreateDto;
 import com.microservices.user.dto.UserLoginDto;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final KeycloakService keycloakService;
+    private final TeamFeignClient teamFeignClient;
     private final ApplicationEventPublisher eventPublisher;
     private static final String USER_NOT_FOUND = "User with id [%d] not found";
 
@@ -64,6 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserReadDto findById(Long id) {
+        teamFeignClient.getTeam(1L);
         return userMapper.toDto(userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundBaseException(USER_NOT_FOUND.formatted(id))));
     }

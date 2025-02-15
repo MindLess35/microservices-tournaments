@@ -6,6 +6,7 @@ import com.microservices.tournament.dto.team.TournamentTeamUpdateDto;
 import com.microservices.tournament.entity.TournamentTeam;
 import com.microservices.tournament.entity.embedded.TournamentIdAndTeamId;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
