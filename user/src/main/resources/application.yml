@@ -102,6 +102,11 @@ spring:
           default:
             loggerLevel: FULL
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
 logging:
   level:
     org:

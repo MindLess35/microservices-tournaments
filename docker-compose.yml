@@ -305,7 +305,13 @@ services:
       - postgres-for-keycloak:/var/lib/postgresql/data
 
 
-
+  zipkin:
+    image: bitnami/zipkin:3.4.2
+    container_name: zipkin
+    networks:
+      - microservices-network
+    ports:
+      - "9411:9411"
 
 
 
