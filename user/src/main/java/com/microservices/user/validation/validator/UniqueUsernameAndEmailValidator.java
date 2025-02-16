@@ -1,6 +1,6 @@
 package com.microservices.user.validation.validator;
 
-import com.microservices.user.dto.UserCreateDto;
+import com.microservices.user.dto.user.UserCreateDto;
 import com.microservices.user.projection.UsernameAndEmailProjection;
 import com.microservices.user.repository.UserRepository;
 import com.microservices.user.validation.annotation.UniqueUsernameAndEmail;

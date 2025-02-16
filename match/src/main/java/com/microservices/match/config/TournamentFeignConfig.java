@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedCli
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 
 @Configuration
-public class TeamFeignConfig {
+public class TournamentFeignConfig {
 
     @Bean
     Logger.Level feignLoggerLevel() {
@@ -23,19 +23,19 @@ public class TeamFeignConfig {
     }
 
     @Bean
-    public OAuth2AccessTokenInterceptor teamOAuth2AccessTokenInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
-        return new OAuth2AccessTokenInterceptor("team", authorizedClientManager);
+    public OAuth2AccessTokenInterceptor tournamentOAuth2AccessTokenInterceptor( OAuth2AuthorizedClientManager authorizedClientManager) {
+        return new OAuth2AccessTokenInterceptor("tournament", authorizedClientManager);
     }
 
 //    @Bean
-//    public OAuth2AuthorizedClientManager teamOAuth2AuthorizedClientManager(
+//    public OAuth2AuthorizedClientManager tournamentOAuth2AuthorizedClientManager(
 //            ClientRegistrationRepository clientRegistrationRepository,
 //            OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
 //
 //        OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
 //                .clientCredentials()
 //                .build();
-//
+////        DefaultOAuth2AuthorizedClientManager
 //        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager (
 //                clientRegistrationRepository, oAuth2AuthorizedClientService);
 //

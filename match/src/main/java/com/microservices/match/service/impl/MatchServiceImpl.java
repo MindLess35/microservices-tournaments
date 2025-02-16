@@ -2,13 +2,16 @@ package com.microservices.match.service.impl;
 
 import com.common.exception.exception.base.BadRequestBaseException;
 import com.common.exception.exception.base.NotFoundBaseException;
+import com.microservices.match.client.TeamFeignClient;
+import com.microservices.match.client.TournamentFeignClient;
 import com.microservices.match.dto.MatchCreateDto;
 import com.microservices.match.dto.MatchReadDto;
 import com.microservices.match.dto.MatchUpdateDto;
+import com.microservices.match.dto.kafka.NotificationMessage;
 import com.microservices.match.entity.Match;
-import com.microservices.match.client.TeamFeignClient;
-import com.microservices.match.client.TournamentFeignClient;
+import com.microservices.match.enums.NotificationType;
 import com.microservices.match.mapper.MatchMapper;
+import com.microservices.match.producer.NotificationProducer;
 import com.microservices.match.repository.MatchRepository;
 import com.microservices.match.service.interfaces.MatchService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class MatchServiceImpl implements MatchService {
     private final MatchMapper matchMapper;
     private final TournamentFeignClient tournamentClient;
     private final TeamFeignClient teamClient;
+    private final NotificationProducer notificationProducer;
     private static final String MATCH_NOT_FOUND = "Match with id [%d] not found";
 
     @Override
@@ -35,6 +39,9 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional
     public MatchReadDto createMatch(MatchCreateDto dto) {
+        notificationProducer.sendNotification(new NotificationMessage("1", "2", "3", "4",
+                NotificationType.MATCH_SCHEDULED));
+
         swapTeamIdsIfNecessary(dto);
         Long firstTeamId = dto.getFirstTeamId();
         Long secondTeamId = dto.getSecondTeamId();
@@ -46,10 +53,10 @@ public class MatchServiceImpl implements MatchService {
             throw new BadRequestBaseException("Match with firstTeamId [%d], secondTeamId [%d] and tournamentId [%d] is already exists"
                     .formatted(firstTeamId, secondTeamId, tournamentId));
         }
-
         tournamentClient.checkTournamentExistence(tournamentId);
         teamClient.checkTeamsExistence(firstTeamId, secondTeamId);
         Match match = matchMapper.toEntity(dto);
+
         return matchMapper.toDto(matchRepository.save(match));
     }
 

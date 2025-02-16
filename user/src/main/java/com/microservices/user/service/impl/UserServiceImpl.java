@@ -2,14 +2,15 @@ package com.microservices.user.service.impl;
 
 import com.common.exception.exception.base.NotFoundBaseException;
 import com.microservices.user.client.TeamFeignClient;
-import com.microservices.user.dto.LoginResponseDto;
-import com.microservices.user.dto.UserCreateDto;
-import com.microservices.user.dto.UserLoginDto;
-import com.microservices.user.dto.UserReadDto;
-import com.microservices.user.dto.UserUpdateDto;
+import com.microservices.user.dto.auth.LoginResponseDto;
+import com.microservices.user.dto.user.UserCreateDto;
+import com.microservices.user.dto.auth.UserLoginDto;
+import com.microservices.user.dto.user.UserReadDto;
+import com.microservices.user.dto.user.UserUpdateDto;
 import com.microservices.user.entity.User;
 import com.microservices.user.event.UserCreatedEvent;
 import com.microservices.user.mapper.UserMapper;
+import com.microservices.user.producer.NotificationProducer;
 import com.microservices.user.repository.UserRepository;
 import com.microservices.user.service.interfaces.KeycloakService;
 import com.microservices.user.service.interfaces.UserService;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,27 +32,22 @@ public class UserServiceImpl implements UserService {
     private final KeycloakService keycloakService;
     private final TeamFeignClient teamFeignClient;
     private final ApplicationEventPublisher eventPublisher;
+    private final NotificationProducer notificationProducer;
     private static final String USER_NOT_FOUND = "User with id [%d] not found";
 
-    @SuppressWarnings({"OptionalGetWithoutIsPresent", "java:S3655"})
     @Override
     @Transactional
     public UserReadDto createUser(UserCreateDto userCreateDto) {
         UUID userUuid = keycloakService.createUser(userCreateDto);
-        return Optional.of(userCreateDto)
-                .map(userMapper::toEntity)
-                .map(user -> {
-                    user.setKeycloakUuid(userUuid);
-                    return user;
-                })
-                .map(userRepository::save)
-                .map(userMapper::toDto)
-                .map(dto -> {
-                    eventPublisher.publishEvent(new UserCreatedEvent(userUuid));
-                    return dto;
-                })
-                .get();
+        User user = userMapper.toEntity(userCreateDto);
+        user.setKeycloakUuid(userUuid);
+        UserReadDto dto = userMapper.toDto(userRepository.save(user));
+
+        eventPublisher.publishEvent(new UserCreatedEvent(userUuid));
+        notificationProducer.sendNotification(userMapper.toNotificationMessage(dto));
+        return dto;
     }
+
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     public void handleUserCreationRollback(UserCreatedEvent event) {

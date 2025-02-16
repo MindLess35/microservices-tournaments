@@ -1,14 +1,14 @@
 POST http://localhost:8888/realms/tournaments/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
-#client_id=user&
-#client_secret=L5XUWUCutsXlXT0x0qcULSDQuznYqqvW&
-#username=string2&
-#password=string&
-#grant_type=password
-client_id=team&
-client_secret=Kbv9nt2poEYXtJxu9AftT6ef6a1wmV4Q&
-grant_type=client_credentials
+client_id=user&
+client_secret=L5XUWUCutsXlXT0x0qcULSDQuznYqqvW&
+username=string2&
+password=string&
+grant_type=password
+#client_id=team&
+#client_secret=Kbv9nt2poEYXtJxu9AftT6ef6a1wmV4Q&
+#grant_type=client_credentials
 
 
 

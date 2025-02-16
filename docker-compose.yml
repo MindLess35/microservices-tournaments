@@ -52,6 +52,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ALLOW_ANONYMOUS_LOGIN: yes
+    volumes:
+      - zookeeper-data:/bitnami/zookeeper
     ports:
       - "2181:2181"
 
@@ -69,13 +71,12 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_CREATE_TOPICS:
-#        - dresses:1:1
-#        - ratings:1:1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER:PLAINTEXT,LOCAL:PLAINTEXT
       KAFKA_LISTENERS: DOCKER://:9093,LOCAL://:9092
       KAFKA_ADVERTISED_LISTENERS: DOCKER://kafka:9093,LOCAL://localhost:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+    volumes:
+      - kafka-data:/bitnami/kafka
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -353,5 +354,11 @@ volumes:
     driver: local
 
   postgres-for-keycloak:
+    driver: local
+
+  kafka-data:
+    driver: local
+
+  zookeeper-data:
     driver: local
 

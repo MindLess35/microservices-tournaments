@@ -1,11 +1,11 @@
 package com.microservices.user.service.interfaces;
 
 
-import com.microservices.user.dto.LoginResponseDto;
-import com.microservices.user.dto.UserCreateDto;
-import com.microservices.user.dto.UserLoginDto;
-import com.microservices.user.dto.UserReadDto;
-import com.microservices.user.dto.UserUpdateDto;
+import com.microservices.user.dto.auth.LoginResponseDto;
+import com.microservices.user.dto.user.UserCreateDto;
+import com.microservices.user.dto.auth.UserLoginDto;
+import com.microservices.user.dto.user.UserReadDto;
+import com.microservices.user.dto.user.UserUpdateDto;
 
 public interface UserService {
 

@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 //        name = "account-manager-client",
 //        configuration = AccountManagerFeignConfig.class
 //)
-//@FeignClient(name = "team", configuration = TeamFeignConfig.class)
-//public interface TeamFeignClient {
-//
-//    @GetMapping("/api/v1/teams/{id}")
-//    ResponseEntity<Void> getTeam(@PathVariable("id") Long id);
-//}
+@FeignClient(name = "team", configuration = TeamFeignConfig.class)
+public interface TeamFeignClient {
+
+    @GetMapping("/api/v1/teams/{id}")
+    ResponseEntity<Void> getTeam(@PathVariable("id") Long id);
+}

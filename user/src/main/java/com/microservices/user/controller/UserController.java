@@ -1,10 +1,10 @@
 package com.microservices.user.controller;
 
-import com.microservices.user.dto.LoginResponseDto;
-import com.microservices.user.dto.UserCreateDto;
-import com.microservices.user.dto.UserLoginDto;
-import com.microservices.user.dto.UserReadDto;
-import com.microservices.user.dto.UserUpdateDto;
+import com.microservices.user.dto.auth.LoginResponseDto;
+import com.microservices.user.dto.user.UserCreateDto;
+import com.microservices.user.dto.auth.UserLoginDto;
+import com.microservices.user.dto.user.UserReadDto;
+import com.microservices.user.dto.user.UserUpdateDto;
 import com.microservices.user.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

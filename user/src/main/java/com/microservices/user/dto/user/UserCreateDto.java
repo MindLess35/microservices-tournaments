@@ -1,4 +1,4 @@
-package com.microservices.user.dto;
+package com.microservices.user.dto.user;
 
 import com.microservices.user.enums.Role;
 import com.microservices.user.validation.annotation.Password;

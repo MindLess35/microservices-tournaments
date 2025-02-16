@@ -1,4 +1,4 @@
-package com.microservices.user.dto;
+package com.microservices.user.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

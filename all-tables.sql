@@ -90,7 +90,7 @@ CREATE TABLE matches (
 CREATE TABLE notifications (
     id              BIGSERIAL       PRIMARY KEY,
     user_id         BIGINT          NOT NULL,
-    event_type      VARCHAR(128)    NOT NULL,
+    type            VARCHAR(64)     NOT NULL,
     status          VARCHAR(64)     NOT NULL,
     created_at      TIMESTAMP       NOT NULL
 );

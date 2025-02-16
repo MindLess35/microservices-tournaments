@@ -22,23 +22,26 @@ spring:
         hbm2ddl.auto: validate
         default_schema: notifications
 
-#  kafka:
-#    consumer:
-#      bootstrap-servers: localhost:9092
-#      group-id:
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-#      properties:
-#        spring.json.trusted.packages: *
-#        spring.json.type.mapping:
+  kafka:
+    template:
+      default-topic: notifications
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: notifications-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json:
+          trusted.packages: "*"
+          type.mapping: notificationMessage:com.microservices.notification.dto.kafka.NotificationMessage
+
 
   mail:
     host: smtp.gmail.com
     port: 587
     username: readingbooksjms@gmail.com
     password:
-
     properties:
       mail:
         debug: true
@@ -53,14 +56,12 @@ spring:
     default-schema: ${spring.jpa.properties.hibernate.default_schema}
 
 logging:
-#  config: classpath:/logging/logback-spring.xml
   level:
     org:
       hibernate.orm.jdbc.bind: TRACE
-#      elasticsearch.client: TRACE
       springframework:
         jdbc.core: TRACE
-#        cache: TRACE
-#        data:
-#          redis:
-#            core: TRACE
+        kafka: INFO
+    org.apache:
+      http: TRACE
+      kafka: INFO

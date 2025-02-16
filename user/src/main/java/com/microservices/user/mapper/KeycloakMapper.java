@@ -1,7 +1,7 @@
 package com.microservices.user.mapper;
 
-import com.microservices.user.dto.UserCreateDto;
-import com.microservices.user.dto.UserLoginDto;
+import com.microservices.user.dto.user.UserCreateDto;
+import com.microservices.user.dto.auth.UserLoginDto;
 import com.microservices.user.property.KeycloakProperties;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
