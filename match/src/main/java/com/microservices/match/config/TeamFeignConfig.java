@@ -17,10 +17,10 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepo
 @Configuration
 public class TeamFeignConfig {
 
-    @Bean
-    Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
-    }
+//    @Bean
+//    Logger.Level feignLoggerLevel() {
+//        return Logger.Level.FULL;
+//    }
 
     @Bean
     public OAuth2AccessTokenInterceptor teamOAuth2AccessTokenInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {

@@ -1,12 +1,21 @@
 FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 WORKDIR /
 
-COPY pom.xml .
+COPY match/pom.xml .
+
+COPY common-exception/target/common-exception-1.0.jar /tmp/common-exception-1.0.jar
+
+RUN --mount=type=cache,target=/root/.m2 mvn install:install-file \
+      -Dfile=/tmp/common-exception-1.0.jar \
+      -DgroupId=com.common \
+      -DartifactId=common-exception \
+      -Dversion=1.0 \
+      -Dpackaging=jar
 
 RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline
 
-COPY src/main/resources src/main/resources
-COPY src/main/java src/main/java
+COPY match/src/main/resources src/main/resources
+COPY match/src/main/java src/main/java
 
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 

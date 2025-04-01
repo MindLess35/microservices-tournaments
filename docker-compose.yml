@@ -83,9 +83,10 @@ services:
 
 
   user-service:
-#    image: user-service:1.0
+    image: user-service:1.0
     build:
-      context: ./user
+      context: .
+      dockerfile: user/Dockerfile
     container_name: user-service
     networks:
       - microservices-network
@@ -121,9 +122,10 @@ services:
 
 
   team-service:
-#    image: team-service:1.0
+    image: team-service:1.0
     build:
-      context: ./team
+      context: .
+      dockerfile: team/Dockerfile
     container_name: team-service
     networks:
       - microservices-network
@@ -134,7 +136,7 @@ services:
       - postgres-for-team-service
     environment:
       - SERVER_PORT=8030
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-team-service:5433/team
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-team-service:5432/team
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=teams
@@ -159,9 +161,10 @@ services:
 
 
   tournament-service:
-#    image: tournament-service:1.0
+    image: tournament-service:1.0
     build:
-      context: ./tournament
+      context: .
+      dockerfile: tournament/Dockerfile
     container_name: tournament-service
     networks:
       - microservices-network
@@ -172,7 +175,7 @@ services:
       - postgres-for-tournament-service
     environment:
       - SERVER_PORT=8040
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-tournament-service:5434/tournament
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-tournament-service:5432/tournament
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=tournaments
@@ -197,9 +200,10 @@ services:
 
 
   match-service:
-#    image: match-service:1.0
+    image: match-service:1.0
     build:
-      context: ./match
+      context: .
+      dockerfile: match/Dockerfile
     container_name: match-service
     networks:
       - microservices-network
@@ -210,7 +214,7 @@ services:
       - postgres-for-match-service
     environment:
       - SERVER_PORT=8050
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-match-service:5435/match
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-match-service:5432/match
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=matches
@@ -237,7 +241,8 @@ services:
   notification-service:
 #    image: notification-service:1.0
     build:
-      context: ./notification
+      context: .
+      dockerfile: notification/Dockerfile
     container_name: notification-service
     networks:
       - microservices-network
@@ -248,7 +253,7 @@ services:
       - postgres-for-notification-service
     environment:
       - SERVER_PORT=8060
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-notification-service:5436/notification
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-for-notification-service:5432/notification
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=notifications

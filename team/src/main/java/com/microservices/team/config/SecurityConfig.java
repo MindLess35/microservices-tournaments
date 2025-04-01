@@ -42,6 +42,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(WHITE_LIST_URLS).permitAll()
+//                        .requestMatchers("api/v1/teams/**").hasAuthority("team")
                         .anyRequest().authenticated());
 
         return httpSecurity.build();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,8 @@ public class TeamController {
     }
 
     @GetMapping
-    public ResponseEntity<Void> checkTeamsExists(@RequestParam Long firstTeamId, @RequestParam Long secondTeamId) {
+    public ResponseEntity<Void> checkTeamsExists(@RequestHeader(value = "Authorization") String auth, @RequestParam Long firstTeamId, @RequestParam Long secondTeamId) {
+        System.out.println("auth = " + auth);
         teamService.checkTeamsExists(firstTeamId, secondTeamId);
         return ResponseEntity.ok().build();
     }

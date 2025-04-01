@@ -70,19 +70,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OAuth2AuthorizedClientManager tournamentOAuth2AuthorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository) {
-
-        OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-                .clientCredentials()
-                .build();
-
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager (
-                clientRegistrationRepository, authorizedClientRepository);
-
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-        return authorizedClientManager;
+    public AuthorizedClientServiceOAuth2AuthorizedClientManager
+    authorizedClientServiceAndManager(ClientRegistrationRepository clientRegistrationRepository,
+                                      OAuth2AuthorizedClientService authorizedClientService) {
+        return new AuthorizedClientServiceOAuth2AuthorizedClientManager(
+                clientRegistrationRepository,
+                authorizedClientService
+        );
     }
+
+//    @Bean
+//    public OAuth2AuthorizedClientManager tournamentOAuth2AuthorizedClientManager(
+//            ClientRegistrationRepository clientRegistrationRepository,
+//            OAuth2AuthorizedClientRepository authorizedClientRepository) {
+//
+//        OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+//                .clientCredentials()
+//                .build();
+//
+//        DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager (
+//                clientRegistrationRepository, authorizedClientRepository);
+//
+//        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+//        return authorizedClientManager;
+//    }
 
 }
