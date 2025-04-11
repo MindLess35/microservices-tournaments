@@ -67,6 +67,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+
 //    @Operation(summary = "Changes the user's password")
 //    @PatchMapping("{id}/password")
 //    public ResponseEntity<HttpStatus> changePassword(@PathVariable("id") Long id,

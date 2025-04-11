@@ -1,0 +1,76 @@
+keycloak:
+  auth-server-url: http://localhost:8888
+  realm: tournaments
+  client-id: admin-cli
+  client-secret: nUrAUYb1Q09zF1HmFgYk7FlnVdlMl0LR
+
+  user-client-id: user
+  user-client-secret: L5XUWUCutsXlXT0x0qcULSDQuznYqqvW
+  grant-type: password
+
+
+server:
+  port: 8020
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user
+    username: nikita
+    password: 1234
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        hbm2ddl.auto: validate
+        default_schema: users
+
+  kafka:
+    template:
+      default-topic: notifications
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: notificationMessage:com.microservices.user.dto.kafka.NotificationMessage
+
+  liquibase:
+    enabled: true
+    change-log: liquibase/changelog-master.xml
+    default-schema: ${spring.jpa.properties.hibernate.default_schema}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  level:
+    org:
+      hibernate.orm.jdbc.bind: TRACE
+      springframework:
+        security: TRACE
+        jdbc.core: TRACE
+        cloud:
+          openfeign: TRACE
+        kafka: TRACE
+    feign: TRACE
+    feign.Logger: TRACE
+    org.springframework.cloud.openfeign.FeignClient: TRACE
+    org.springframework.cloud.openfeign.loadbalancer: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.security.oauth2.client: TRACE
+    org.springframework.security.oauth2.client.registration: TRACE
+    org.springframework.security.oauth2.client.web: TRACE
+    org.keycloak: TRACE
+    org.apache:
+      http: TRACE
+      kafka: TRACE
+
+
+
+

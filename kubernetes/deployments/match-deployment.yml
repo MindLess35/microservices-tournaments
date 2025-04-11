@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      components: match
+
+  template:
+    metadata:
+      labels:
+        components: match
+
+    spec:
+      containers:
+        - name: match-service
+          image: match-service:1.0
+          ports:
+            - containerPort: 8050
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

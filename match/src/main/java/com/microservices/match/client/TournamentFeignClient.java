@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-@FeignClient(name = "tournament", configuration = TournamentFeignConfig.class)
+@FeignClient(name = "tournament", configuration = TournamentFeignConfig.class, url = "http://localhost:8010")
 public interface TournamentFeignClient {
 
     @GetMapping("/api/v1/tournaments/{id}")

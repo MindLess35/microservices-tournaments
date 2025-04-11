@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      components: user
+
+  template:
+    metadata:
+      labels:
+        components: user
+
+    spec:
+      containers:
+        - name: user-service
+          image: user-service:1.0
+          ports:
+            - containerPort: 8020
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

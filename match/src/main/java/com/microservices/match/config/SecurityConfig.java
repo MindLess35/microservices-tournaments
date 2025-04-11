@@ -94,5 +94,4 @@ public class SecurityConfig {
 //        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 //        return authorizedClientManager;
 //    }
-
 }

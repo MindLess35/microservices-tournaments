@@ -7,5 +7,23 @@ spring:
       discovery:
         locator:
           enabled: true
-#    routes:
-#    - id
+      routes:
+        - id: match
+          uri: lb:http://match
+          predicates:
+            - Path=/api/v1/matches/**
+
+        - id: team
+          uri: lb:http://team
+          predicates:
+            - Path=/api/v1/teams/**
+
+        - id: tournament
+          uri: lb:http://tournament
+          predicates:
+            - Path=/api/v1/tournaments/**
+
+        - id: user
+          uri: lb:http://user
+          predicates:
+            - Path=/api/v1/users/**

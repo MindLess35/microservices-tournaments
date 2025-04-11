@@ -101,8 +101,8 @@ public class TeamServiceImpl implements TeamService {
             team.setCaptainId(null);
         }
 
-        Team updateTeam = teamMapper.updateEntity(dto, team);
-        Team savedTeam = teamRepository.saveAndFlush(updateTeam);
+        Team updatedTeam = teamMapper.updateEntity(dto, team);
+        Team savedTeam = teamRepository.saveAndFlush(updatedTeam);
         return teamMapper.toDto(savedTeam);
     }
 

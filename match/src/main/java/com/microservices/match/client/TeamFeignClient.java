@@ -6,17 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-//@Bean
-//public OAuth2AccessTokenInterceptor affOAuth2AccessTokenInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
-//    return new OAuth2AccessTokenInterceptor("account-manager-client",
-//            authorizedClientManager);
-//}
-//
-//@FeignClient(
-//        name = "account-manager-client",
-//        configuration = AccountManagerFeignConfig.class
-//)
-@FeignClient(name = "team", configuration = TeamFeignConfig.class)
+@FeignClient(name = "team", configuration = TeamFeignConfig.class, url = "http://localhost:8010")
 public interface TeamFeignClient {
 
     @GetMapping("/api/v1/teams")

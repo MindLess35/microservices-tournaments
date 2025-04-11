@@ -239,7 +239,7 @@ services:
 
 
   notification-service:
-#    image: notification-service:1.0
+    image: notification-service:1.0
     build:
       context: .
       dockerfile: notification/Dockerfile

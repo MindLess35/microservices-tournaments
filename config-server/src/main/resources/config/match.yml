@@ -1,0 +1,107 @@
+server:
+  port: 8050
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/match
+    username: nikita
+    password: 1234
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        hbm2ddl.auto: validate
+        default_schema: matches
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/tournaments
+
+      client:
+        registration:
+          team:
+            client-id: team
+#            client-secret: Kbv9nt2poEYXtJxu9AftT6ef6a1wmV4Q
+            client-secret: R5cNfEvW3uh5Y60dYYWo0Rtf65cBcZEq
+            authorization-grant-type: client_credentials
+          tournament:
+            client-id: tournament
+            client-secret: bJ2xj82vJoABfwndl2FABMEZdTvqO95o
+            authorization-grant-type: client_credentials
+        provider:
+          team:
+            token-uri: http://localhost:8888/realms/team/protocol/openid-connect/token
+          tournament:
+            token-uri: http://localhost:8888/realms/tournaments/protocol/openid-connect/token
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            default-request-headers:
+              Content-type: application/json
+              Accept: application/json
+              Accept-Charset: UTF-8
+            follow-redirects: false
+            loggerLevel: FULL
+          team:
+            url: http://localhost:8030
+#            url: http://team
+          tournament:
+            url: http://localhost:8040
+#            url: http://tournament
+      oauth2:
+        enabled: false
+
+  kafka:
+    template:
+      default-topic: notifications
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: notificationMessage:com.microservices.match.dto.kafka.NotificationMessage
+
+  liquibase:
+    enabled: true
+    change-log: liquibase/changelog-master.xml
+    default-schema: ${spring.jpa.properties.hibernate.default_schema}
+
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+
+logging:
+  level:
+    org:
+      hibernate.orm.jdbc.bind: TRACE
+      springframework:
+        jdbc.core: TRACE
+        security: TRACE
+        kafka: TRACE
+    feign: TRACE
+    feign.Logger: TRACE
+    org.springframework.cloud.openfeign.FeignClient: TRACE
+    org.springframework.cloud.openfeign.loadbalancer: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.security.oauth2.client: TRACE
+    org.springframework.security.oauth2.client.registration: TRACE
+    org.springframework.security.oauth2.client.web: TRACE
+    org.keycloak: TRACE
+    org.apache:
+      http: TRACE
+      kafka: TRACE
+

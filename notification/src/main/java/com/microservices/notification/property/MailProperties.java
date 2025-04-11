@@ -2,7 +2,6 @@ package com.microservices.notification.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Properties;
-
 @ConfigurationProperties(prefix = "spring.mail")
 public record MailProperties(
         String host,
