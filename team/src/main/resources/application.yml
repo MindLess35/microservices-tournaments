@@ -1,60 +1,6 @@
-http:
-  user-service-url: http://user/api/v1/users/
-
-
-server:
-  port: 8030
-
 spring:
   application:
     name: team
   config:
     import: optional:configserver:http://localhost:8000
 
-  datasource:
-    url: jdbc:postgresql://localhost:5433/team
-    username: nikita
-    password: 1234
-
-  jpa:
-    open-in-view: false
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        hbm2ddl.auto: validate
-        default_schema: teams
-
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://localhost:8888/realms/tournaments
-
-  liquibase:
-    enabled: true
-    change-log: liquibase/changelog-master.xml
-    default-schema: ${spring.jpa.properties.hibernate.default_schema}
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-
-logging:
-  level:
-    org:
-      hibernate.orm.jdbc.bind: TRACE
-      springframework:
-        jdbc.core: TRACE
-        security: TRACE
-    feign: TRACE
-    feign.Logger: TRACE
-    org.springframework.cloud.openfeign.FeignClient: TRACE
-    org.springframework.cloud.openfeign.loadbalancer: TRACE
-    org.springframework.security.oauth2: TRACE
-    org.springframework.security.oauth2.client: TRACE
-    org.springframework.security.oauth2.client.registration: TRACE
-    org.springframework.security.oauth2.client.web: TRACE
-    org.keycloak: TRACE
-    org.apache.http: TRACE

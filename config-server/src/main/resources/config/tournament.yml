@@ -6,7 +6,6 @@ server:
   port: 8040
 
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5434/tournament
     username: nikita

@@ -13,7 +13,6 @@ server:
   port: 8020
 
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/user
     username: nikita
@@ -27,6 +26,12 @@ spring:
         format_sql: true
         hbm2ddl.auto: validate
         default_schema: users
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/tournaments
 
   kafka:
     template:
@@ -48,28 +53,28 @@ management:
     sampling:
       probability: 1.0
 
-logging:
-  level:
-    org:
-      hibernate.orm.jdbc.bind: TRACE
-      springframework:
-        security: TRACE
-        jdbc.core: TRACE
-        cloud:
-          openfeign: TRACE
-        kafka: TRACE
-    feign: TRACE
-    feign.Logger: TRACE
-    org.springframework.cloud.openfeign.FeignClient: TRACE
-    org.springframework.cloud.openfeign.loadbalancer: TRACE
-    org.springframework.security.oauth2: TRACE
-    org.springframework.security.oauth2.client: TRACE
-    org.springframework.security.oauth2.client.registration: TRACE
-    org.springframework.security.oauth2.client.web: TRACE
-    org.keycloak: TRACE
-    org.apache:
-      http: TRACE
-      kafka: TRACE
+#logging:
+#  level:
+#    org:
+#      hibernate.orm.jdbc.bind: TRACE
+#      springframework:
+#        security: TRACE
+#        jdbc.core: TRACE
+#        cloud:
+#          openfeign: TRACE
+#        kafka: TRACE
+#    feign: TRACE
+#    feign.Logger: TRACE
+#    org.springframework.cloud.openfeign.FeignClient: TRACE
+#    org.springframework.cloud.openfeign.loadbalancer: TRACE
+#    org.springframework.security.oauth2: TRACE
+#    org.springframework.security.oauth2.client: TRACE
+#    org.springframework.security.oauth2.client.registration: TRACE
+#    org.springframework.security.oauth2.client.web: TRACE
+#    org.keycloak: TRACE
+#    org.apache:
+#      http: TRACE
+#      kafka: TRACE
 
 
 

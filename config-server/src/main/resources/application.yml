@@ -1,3 +1,17 @@
+server:
+  port: 8000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+
 spring:
   application:
     name: config-server
@@ -17,9 +31,6 @@ spring:
           #git:
           #   uri: https://github.com/ihuaylupo/config.git
           #   searchPaths: licensingservice
-
-server:
-  port: 8000
 
 #encrypt: todo add encrypt key and git repo config
 #  key: fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo

@@ -1,6 +1,7 @@
 package com.microservices.user.client;
 
 import com.microservices.user.dto.auth.LoginResponseDto;
+import liquibase.Liquibase;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;

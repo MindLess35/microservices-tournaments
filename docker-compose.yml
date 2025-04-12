@@ -3,7 +3,7 @@ name: microservices
 services:
 
   config-server:
-    image: config-server:1.0
+    image: mindless35/tournaments:config-server-1.0
     build:
       context: ./config-server
     container_name: config-server
@@ -11,11 +11,16 @@ services:
       - microservices-network
     environment:
       - SERVER_PORT=8000
+      - EUREKA_INSTANCE_HOSTNAME=discovery-server
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+#      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+#      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
+#      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8000:8000"
 
   discovery-server:
-    image: discovery-server:1.0
+    image: mindless35/tournaments:discovery-server-1.0
     build:
       context: ./discovery-server
     container_name: discovery-server
@@ -25,11 +30,12 @@ services:
       - config-server
     environment:
       - SERVER_PORT=8761
+#      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
     ports:
       - "8761:8761"
 
   gateway:
-    image: gateway:1.0
+    image: mindless35/tournaments:gateway-1.0
     build:
       context: ./gateway
     container_name: gateway
@@ -83,17 +89,18 @@ services:
 
 
   user-service:
-    image: user-service:1.0
+    image: mindless35/tournaments:user-service-1.0
     build:
       context: .
       dockerfile: user/Dockerfile
     container_name: user-service
+    restart: on-failure:5
     networks:
       - microservices-network
       - user-service-network
     depends_on:
-#      - config-server
-#      - discovery-server
+      - config-server
+      - discovery-server
       - postgres-for-user-service
     environment:
       - SERVER_PORT=8020
@@ -101,6 +108,12 @@ services:
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=users
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
+      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+      - EUREKA_INSTANCE_HOSTNAME=discovery-server
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8020:8020"
 
@@ -122,7 +135,7 @@ services:
 
 
   team-service:
-    image: team-service:1.0
+    image: mindless35/tournaments:team-service-1.0
     build:
       context: .
       dockerfile: team/Dockerfile
@@ -161,7 +174,7 @@ services:
 
 
   tournament-service:
-    image: tournament-service:1.0
+    image: mindless35/tournaments:tournament-service-1.0
     build:
       context: .
       dockerfile: tournament/Dockerfile
@@ -200,7 +213,7 @@ services:
 
 
   match-service:
-    image: match-service:1.0
+    image: mindless35/tournaments:match-service-1.0
     build:
       context: .
       dockerfile: match/Dockerfile
@@ -239,7 +252,7 @@ services:
 
 
   notification-service:
-    image: notification-service:1.0
+    image: mindless35/tournaments:notification-service-1.0
     build:
       context: .
       dockerfile: notification/Dockerfile
