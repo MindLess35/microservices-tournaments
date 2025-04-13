@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-for-user-service
+  labels:
+    app: postgres-for-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-for-user-service
+
+  template:
+    metadata:
+      labels:
+        app: postgres-for-user-service
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15.6
+          envFrom:
+            - secretRef:
+                name: common-db-credentials
+            - configMapRef:
+                name: user-postgres-env
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d/init-postgres.sql
+              subPath: init-postgres.sql
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-user-pvc
+        - name: init-sql
+          configMap:
+            name: user-postgres-init

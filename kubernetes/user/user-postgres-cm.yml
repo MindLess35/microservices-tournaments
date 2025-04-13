@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-postgres-env
+data:
+  POSTGRES_DB: "user"

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config-env
+data:
+  SERVER_PORT: "8020"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-for-user-service:5432/user"
+  SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: "users"

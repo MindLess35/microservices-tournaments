@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tournament-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tournament
+
+  template:
+    metadata:
+      labels:
+        app: tournament
+
+    spec:
+      containers:
+        - name: tournament-service
+          image: mindless35/tournaments:tournament-service-1.0
+          ports:
+            - containerPort: 8040
+          envFrom:
+            - configMapRef:
+                name: common-config-env
+            - configMapRef:
+                name: tournament-config-env
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: common-db-credentials
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: common-db-credentials
+                  key: POSTGRES_PASSWORD
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+
+
+

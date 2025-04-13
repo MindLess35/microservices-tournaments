@@ -27,3 +27,8 @@ spring:
           uri: lb:http://user
           predicates:
             - Path=/api/v1/users/**
+            -
+        - id: notification
+          uri: lb:http://notification
+          predicates:
+            - Path=/api/v1/notifications/**

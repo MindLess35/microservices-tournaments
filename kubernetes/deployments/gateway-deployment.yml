@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      components: gateway
+      app: gateway
 
   template:
     metadata:
       labels:
-        components: gateway
+        app: gateway
 
     spec:
       containers:

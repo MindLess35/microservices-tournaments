@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: match-deployment
+  name: zipkin
+  labels:
+    app: zipkin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      components: match
-
+      app: zipkin
   template:
     metadata:
       labels:
-        components: match
-
+        app: zipkin
     spec:
       containers:
-        - name: match-service
-          image: match-service:1.0
+        - name: zipkin
+          image: bitnami/zipkin:3.4.2
           ports:
-            - containerPort: 8050
+            - containerPort: 9411
           resources:
             limits:
               memory: "512Mi"

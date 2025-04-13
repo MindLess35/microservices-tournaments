@@ -11,11 +11,6 @@ services:
       - microservices-network
     environment:
       - SERVER_PORT=8000
-      - EUREKA_INSTANCE_HOSTNAME=discovery-server
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
-#      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
-#      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
-#      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8000:8000"
 
@@ -30,7 +25,6 @@ services:
       - config-server
     environment:
       - SERVER_PORT=8761
-#      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
     ports:
       - "8761:8761"
 
@@ -67,6 +61,7 @@ services:
   kafka:
     image: bitnami/kafka:3.9.0
     container_name: kafka
+    restart: on-failure:5
     networks:
       - microservices-network
       - kafka-network
@@ -111,7 +106,7 @@ services:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
       - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080
       - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
-      - EUREKA_INSTANCE_HOSTNAME=discovery-server
+      - EUREKA_INSTANCE_HOSTNAME=user
       - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
       - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
@@ -140,6 +135,7 @@ services:
       context: .
       dockerfile: team/Dockerfile
     container_name: team-service
+    restart: on-failure:5
     networks:
       - microservices-network
       - team-service-network
@@ -179,6 +175,7 @@ services:
       context: .
       dockerfile: tournament/Dockerfile
     container_name: tournament-service
+    restart: on-failure:5
     networks:
       - microservices-network
       - tournament-service-network
@@ -218,6 +215,7 @@ services:
       context: .
       dockerfile: match/Dockerfile
     container_name: match-service
+    restart: on-failure:5
     networks:
       - microservices-network
       - match-service-network
@@ -238,6 +236,7 @@ services:
   postgres-for-match-service:
     image: postgres:15.6
     container_name: postgres-for-match-service
+    restart: on-failure:5
     networks:
       - match-service-network
     environment:
@@ -257,6 +256,7 @@ services:
       context: .
       dockerfile: notification/Dockerfile
     container_name: notification-service
+    restart: on-failure:5
     networks:
       - microservices-network
       - notification-service-network
@@ -293,6 +293,7 @@ services:
   keycloak:
     image: bitnami/keycloak:26.0.5-debian-12-r1
     container_name: keycloak
+    restart: on-failure:5
     networks:
       - microservices-network
       - keycloak-network

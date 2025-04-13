@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tournament-config-env
+data:
+  SERVER_PORT: "8040"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-for-tournament-service:5432/tournament"
+  SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: "tournaments"

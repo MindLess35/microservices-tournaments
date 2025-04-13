@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      components: discovery-server
+      app: discovery-server
 
   template:
     metadata:
       labels:
-        components: discovery-server
+        app: discovery-server
 
     spec:
       containers:

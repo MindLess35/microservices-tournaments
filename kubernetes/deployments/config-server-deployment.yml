@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      components: config-server
+      app: config-server
 
   template:
     metadata:
       labels:
-        components: config-server
+        app: config-server
 
     spec:
       containers:

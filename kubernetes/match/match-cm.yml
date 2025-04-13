@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: match-config-env
+data:
+  SERVER_PORT: "8050"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-for-match-service:5432/match"
+  SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: "matches"

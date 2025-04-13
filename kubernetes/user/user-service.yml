@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: match-service
+  name: user-service
 
 spec:
   type: ClusterIP
   ports:
-    - port: 8050
+    - port: 8020
       protocol: TCP
 
   selector:
-    components: match
+    app: user

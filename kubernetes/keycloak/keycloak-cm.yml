@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-env
+data:
+  KEYCLOAK_DATABASE_HOST: "postgres-for-keycloak"
+  KEYCLOAK_DATABASE_PORT: "5432"

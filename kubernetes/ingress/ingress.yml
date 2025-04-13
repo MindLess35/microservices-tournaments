@@ -4,11 +4,10 @@ metadata:
   name: ingress
   annotations:
     nginx.ingress.kubernetes.io/add-base-url: "true"
-
 spec:
   ingressClassName: nginx
   rules:
-    - host: tournaments.ru
+    - host: tournaments.by
       http:
         paths:
           - pathType: Prefix
@@ -26,3 +25,27 @@ spec:
                 name: team-service
                 port:
                   number: 8030
+
+          - pathType: Prefix
+            path: "/api/v1/tournaments"
+            backend:
+              service:
+                name: tournament-service
+                port:
+                  number: 8040
+
+          - pathType: Prefix
+            path: "/api/v1/matches"
+            backend:
+              service:
+                name: match-service
+                port:
+                  number: 8050
+
+          - pathType: Prefix
+            path: "/api/v1/notifications"
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 8060
