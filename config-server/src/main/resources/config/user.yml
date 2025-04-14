@@ -49,9 +49,22 @@ spring:
     default-schema: ${spring.jpa.properties.hibernate.default_schema}
 
 management:
-  tracing:
-    sampling:
-      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
+
 
 #logging:
 #  level:

@@ -1,12 +1,10 @@
 package com.microservices.user.config;
 
 import com.microservices.user.enums.Role;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,7 +27,8 @@ public class SecurityConfig {
             "/api/v1/users/sign-in",
             "/swagger-ui/**",
             "/v3/api-docs",
-            "/v3/api-docs/swagger-config"
+            "/v3/api-docs/swagger-config",
+            "/actuator/**"
     };
     private static final String ROLE_PREFIX = "ROLE_";
     private static final String REALM_ACCESS = "realm_access";
@@ -44,9 +43,6 @@ public class SecurityConfig {
 
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverterForKeycloak())))
-
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(Customizer.withDefaults()))
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(WHITE_LIST_URLS).permitAll()

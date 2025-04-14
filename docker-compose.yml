@@ -95,7 +95,7 @@ services:
       - user-service-network
     depends_on:
       - config-server
-      - discovery-server
+#      - discovery-server
       - postgres-for-user-service
     environment:
       - SERVER_PORT=8020
@@ -294,6 +294,8 @@ services:
     image: bitnami/keycloak:26.0.5-debian-12-r1
     container_name: keycloak
     restart: on-failure:5
+    depends_on:
+      - postgres-for-keycloak
     networks:
       - microservices-network
       - keycloak-network
@@ -305,8 +307,6 @@ services:
       - KEYCLOAK_DATABASE_NAME=keycloak_tournaments
       - KEYCLOAK_DATABASE_HOST=postgres-for-keycloak
       - KEYCLOAK_DATABASE_PORT=5432
-    depends_on:
-      - postgres-for-keycloak
     ports:
       - "8888:8080"
 
@@ -332,6 +332,29 @@ services:
     ports:
       - "9411:9411"
 
+  prometheus:
+    image: bitnami/prometheus:2.55.1
+    container_name: prometheus
+    networks:
+      - monitoring
+      - microservices-network
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./user/src/main/resources/prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:11.6.0
+    container_name: grafana
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+    environment:
+      - GF_SECURITY_ADMIN_USER=nikita
+      - GF_SECURITY_ADMIN_PASSWORD=1234
+    ports:
+      - "3000:3000"
 
 
 
@@ -360,6 +383,8 @@ networks:
   keycloak-network:
     driver: bridge
 
+  monitoring:
+    driver: bridge
 
 
 volumes:
