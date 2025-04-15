@@ -149,6 +149,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=teams
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
+      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+      - EUREKA_INSTANCE_HOSTNAME=team
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8030:8030"
 
@@ -189,6 +194,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=tournaments
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
+      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+      - EUREKA_INSTANCE_HOSTNAME=tournament
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8040:8040"
 
@@ -229,6 +239,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=matches
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
+      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+      - EUREKA_INSTANCE_HOSTNAME=match
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8050:8050"
 
@@ -270,6 +285,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=nikita
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=notifications
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8000
+      - SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/tournaments
+      - EUREKA_INSTANCE_HOSTNAME=notification
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka
+      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka:9093
     ports:
       - "8060:8060"
 
@@ -341,7 +361,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./user/src/main/resources/prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+      - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
 
   grafana:
     image: grafana/grafana:11.6.0
@@ -355,6 +375,21 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=1234
     ports:
       - "3000:3000"
+
+  jenkins:
+    image: jenkins/jenkins:2.506-jdk17
+    container_name: jenkins
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 
 
@@ -410,5 +445,8 @@ volumes:
     driver: local
 
   zookeeper-data:
+    driver: local
+
+  jenkins_home:
     driver: local
 

@@ -15,6 +15,7 @@
 - PostgreSQL
 - Docker, Docker Compose
 - Kubernetes
+- Prometheus, Grafana
 - Apache Kafka
 - Keycloak
 - Zipkin

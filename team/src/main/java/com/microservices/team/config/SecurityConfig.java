@@ -24,7 +24,8 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URLS = {
             "/swagger-ui/**",
             "/v3/api-docs",
-            "/v3/api-docs/swagger-config"
+            "/v3/api-docs/swagger-config",
+            "/actuator/**"
     };
     private static final String ROLE_PREFIX = "ROLE_";
     private static final String REALM_ACCESS = "realm_access";
@@ -47,6 +48,7 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
+
 
 
     @Bean

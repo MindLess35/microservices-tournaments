@@ -23,3 +23,30 @@ spring:
 
 #encrypt: todo add encrypt key and git repo config
 #  key: fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+        "[method.timed.metric]": true
+        percentiles:
+          "[http.server.requests]": true
+        sla:
+          "[http.server.requests]": true
+        minimum-expected-value:
+          "[http.server.requests]": true
+        maximum-expected-value:
+          "[http.server.requests]": true
