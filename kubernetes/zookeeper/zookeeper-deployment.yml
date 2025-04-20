@@ -17,6 +17,7 @@ spec:
       containers:
         - name: zookeeper
           image: bitnami/zookeeper:3.8.4
+          imagePullPolicy: Never
           ports:
             - containerPort: 2181
           envFrom:

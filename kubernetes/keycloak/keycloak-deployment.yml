@@ -17,6 +17,7 @@ spec:
       containers:
         - name: keycloak
           image: bitnami/keycloak:26.0.5-debian-12-r1
+          imagePullPolicy: Never
           envFrom:
             - configMapRef:
                 name: keycloak-env

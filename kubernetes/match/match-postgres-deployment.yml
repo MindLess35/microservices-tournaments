@@ -17,6 +17,7 @@ spec:
       containers:
         - name: postgres
           image: postgres:15.6
+          imagePullPolicy: Never
           envFrom:
             - secretRef:
                 name: common-db-credentials

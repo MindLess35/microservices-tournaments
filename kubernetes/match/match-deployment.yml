@@ -17,6 +17,7 @@ spec:
       containers:
         - name: match-service
           image: mindless35/tournaments:match-service-1.0
+          imagePullPolicy: Never
           ports:
             - containerPort: 8050
           envFrom:

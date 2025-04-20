@@ -17,6 +17,7 @@ spec:
       containers:
         - name: kafka
           image: bitnami/kafka:3.9.0
+          imagePullPolicy: Never
           envFrom:
             - configMapRef:
                 name: kafka-env

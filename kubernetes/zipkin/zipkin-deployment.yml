@@ -17,6 +17,7 @@ spec:
       containers:
         - name: zipkin
           image: bitnami/zipkin:3.4.2
+          imagePullPolicy: Never
           ports:
             - containerPort: 9411
           resources:

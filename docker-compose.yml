@@ -94,7 +94,7 @@ services:
       - microservices-network
       - user-service-network
     depends_on:
-      - config-server
+#      - config-server
 #      - discovery-server
       - postgres-for-user-service
     environment:
@@ -352,6 +352,7 @@ services:
     ports:
       - "9411:9411"
 
+
   prometheus:
     image: bitnami/prometheus:2.55.1
     container_name: prometheus
@@ -362,6 +363,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+
 
   grafana:
     image: grafana/grafana:11.6.0
@@ -375,6 +377,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=1234
     ports:
       - "3000:3000"
+
 
   jenkins:
     image: jenkins/jenkins:2.506-jdk17
@@ -391,6 +394,23 @@ services:
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
+
+  jenkins-with-docker:
+    image: jenkins-with-docker:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile-jenkins
+    container_name: jenkins-with-docker
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 
 networks:

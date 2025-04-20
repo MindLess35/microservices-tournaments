@@ -17,6 +17,7 @@ spec:
       containers:
         - name: tournament-service
           image: mindless35/tournaments:tournament-service-1.0
+          imagePullPolicy: Never
           ports:
             - containerPort: 8040
           envFrom:

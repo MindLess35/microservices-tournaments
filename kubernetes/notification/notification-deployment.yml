@@ -17,6 +17,7 @@ spec:
       containers:
         - name: notification-service
           image: mindless35/tournaments:notification-service-1.0
+          imagePullPolicy: Never
           ports:
             - containerPort: 8060
           envFrom:
