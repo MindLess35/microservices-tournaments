@@ -18,6 +18,7 @@
 - Prometheus, Grafana
 - Apache Kafka
 - Keycloak
+- Jenkins
 - Zipkin
 - Maven
 - Liquibase
